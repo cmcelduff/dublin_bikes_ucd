@@ -1,4 +1,4 @@
-list = ['Amy','Brian','Conor',"Deirdre",'Mark']
+list = ['Amy','Brian','Colm',"Deirdre",'Mark']
 
 for i in list:
     print(i)
