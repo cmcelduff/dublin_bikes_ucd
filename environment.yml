@@ -1,0 +1,7 @@
+name: comp30830
+channels:
+  - defaults
+dependencies:
+  - python
+  - requests
+prefix: /Users/conormcelduff/opt/anaconda3/envs/comp30830
