@@ -4,4 +4,7 @@ channels:
 dependencies:
   - python
   - requests
+  - pandas
+  - jupyterlab
+  - numpy
 prefix: /Users/conormcelduff/opt/anaconda3/envs/comp30830
