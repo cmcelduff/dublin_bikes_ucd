@@ -30,3 +30,4 @@ def main():
 # print(r.text)
 # print(r.url)
 print("hello world")
+print("Test update")
