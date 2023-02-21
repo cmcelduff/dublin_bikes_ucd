@@ -30,8 +30,8 @@ def main():
 #print(r.text)
 # print(r.url)
 print("hello world")
-<<<<<<< HEAD
+# <<<<<<< HEAD
 
-=======
-print("Test update")
->>>>>>> 57b3b8eec2898db1bf84924447c3d4c857112ace
+# =======
+# print("Test update")
+# >>>>>>> 57b3b8eec2898db1bf84924447c3d4c857112ace
