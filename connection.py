@@ -1,12 +1,13 @@
 import pymysql
 
 
+
 def getConnection():
     '''get connection to db'''
-    sql_hostname = 'tutorial-db-instance.cf2q3iwaca38.us-east-1.rds.amazonaws.com'
-    sql_username = 'tutorial_user'
-    sql_password = 'nyj19971023'
-    sql_main_database = 'Bike'
+    sql_hostname = 'dbbikes.cjk4ybuxtkwv.us-east-1.rds.amazonaws.com'
+    sql_username = 'cmcelduff'
+    sql_password = 'Tullamore1!'
+    sql_main_database = 'dbbikes'
     sql_port = 3306
     connection = pymysql.connect(host=sql_hostname,
                                  user=sql_username,

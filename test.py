@@ -11,7 +11,6 @@ import pymysql
 from sqlalchemy import create_engine
 
 
-
 NAME = "Dublin"
 STATIONS = "https://api.jcdecaux.com/vls/v1/stations"
 API_KEY = "7f06972a5ed335cf697379627fd13027274927c7"
@@ -34,7 +33,7 @@ def stations_to_db(text, engine):
 def main():
     USER = "cmcelduff"
     DB = "dbbikes"
-    URL = "dbbikes.cjk4ybuxtkwv.us-east-1.rds.amazonaws.com"
+    URI = "dbbikes.cjk4ybuxtkwv.us-east-1.rds.amazonaws.com"
     PORT = 3306
     PASSWORD = "Tullamore1!"
 
@@ -44,7 +43,14 @@ def main():
     DubBike_STATIONS = "https://api.jcdecaux.com/vls/v1/stations/"
 
     # Connect to database
-    engine = create_engine("mysql+pymysqldb://{}:{}@{}:{}/{}".format(USER, PASSWORD, URL, PORT, DB), echo=True)
+    #Connect to database
+    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
+    connection = engine.connect()
+
+    sql = """
+    CREATE DATABASE IF NOT EXISTS dbikes;
+    """
+    engine.execute(sql)
 
     # Send requests to get all static data, then write to db
     r = requests.get(DubBike_STATIONS, params={"apiKey": DubBike_API, "contract": DubBike_NAME})
