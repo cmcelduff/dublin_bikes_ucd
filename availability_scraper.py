@@ -30,6 +30,7 @@ connection = engine.connect()
 
 def availability_to_db(text):
     stations = json.loads(text)
+    connection = engine.connect()
     #print(availability)
     for station in stations:
         #print(station.get("name"))
