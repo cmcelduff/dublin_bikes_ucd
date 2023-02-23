@@ -27,6 +27,7 @@ NAME="Dublin"
 #Connect to database
 engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
 connection = engine.connect()
+engine.close()
 
 def availability_to_db(text):
     stations = json.loads(text)
