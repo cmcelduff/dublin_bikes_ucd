@@ -15,19 +15,9 @@ import time
 import os
 
 
-URI="dbbikes.cjk4ybuxtkwv.us-east-1.rds.amazonaws.com"
-PORT="3306"
-DB="dbbikes"
-USER="cmcelduff"
-PASSWORD="Tullamore1!"
-STATIONS="https://api.jcdecaux.com/vls/v1/stations"
-DubBike_API = "7f06972a5ed335cf697379627fd13027274927c7"
-NAME="Dublin"
-
 #Connect to database
-engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
-connection = engine.connect()
-engine.close()
+
+
 
 def availability_to_db(text):
     stations = json.loads(text)
@@ -44,7 +34,17 @@ def availability_to_db(text):
     return
 
 def main():
+    URI="dbbikes.cjk4ybuxtkwv.us-east-1.rds.amazonaws.com"
+    PORT="3306"
+    DB="dbbikes"
+    USER="cmcelduff"
+    PASSWORD="Tullamore1!"
+    STATIONS="https://api.jcdecaux.com/vls/v1/stations"
+    DubBike_API = "7f06972a5ed335cf697379627fd13027274927c7"
+    NAME="Dublin"
     print(os.path)
+    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
+    connection = engine.connect()
     while True:
         try:
             now = datetime.datetime.now()
