@@ -50,7 +50,7 @@ def main():
             r = requests.get(STATIONS, params={"apiKey": DubBike_API, "contract" : NAME})
             print(r, now)
             availability_to_db(r.text)
-            time.sleep(5*60)
+            time.sleep(1*60)
         except:
             print(traceback.format_exc())
             
