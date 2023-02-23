@@ -15,6 +15,7 @@ NAME = "Dublin"
 STATIONS = "https://api.jcdecaux.com/vls/v1/stations"
 API_KEY = "7f06972a5ed335cf697379627fd13027274927c7"
 
+
 def stations_to_db(text, engine):
     """
     Read in static data of stations to the database
