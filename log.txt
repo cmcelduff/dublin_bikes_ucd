@@ -1,0 +1,13 @@
+'str' object has no attribute 'get'	2023-02-22 19:45:46
+'str' object has no attribute 'get'	2023-02-22 19:46:16
+'str' object has no attribute 'get'	2023-02-22 19:47:16
+'str' object has no attribute 'get'	2023-02-22 19:48:46
+'str' object has no attribute 'get'	2023-02-22 19:52:58
+(pymysql.err.ProgrammingError) (1146, "Table 'dublin_bikes.availability' doesn't exist")
+[SQL: INSERT INTO `dublin_bikes`.`availability` values(%s,%s,%s,%s,%s,%s)]
+[parameters: (42, 25, 5, datetime.datetime(2023, 2, 22, 20, 6, 50, tzinfo=<DstTzInfo 'Europe/Dublin' GMT0:00:00 DST>), 'OPEN', '2023-02-22 20:09:35')]
+(Background on this error at: https://sqlalche.me/e/14/f405)	2023-02-22 20:09:37
+(pymysql.err.ProgrammingError) (1146, "Table 'dublin_bikes.availability' doesn't exist")
+[SQL: INSERT INTO `dublin_bikes`.`availability` values(%s,%s,%s,%s,%s,%s)]
+[parameters: (42, 25, 5, datetime.datetime(2023, 2, 22, 20, 6, 50, tzinfo=<DstTzInfo 'Europe/Dublin' GMT0:00:00 DST>), 'OPEN', '2023-02-22 20:10:04')]
+(Background on this error at: https://sqlalche.me/e/14/f405)	2023-02-22 20:10:06
