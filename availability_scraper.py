@@ -19,7 +19,7 @@ import os
 
 
 
-def availability_to_db(text):
+def availability_to_db(text, engine):
     stations = json.loads(text)
     connection = engine.connect()
     #print(availability)
@@ -44,13 +44,12 @@ def main():
     NAME="Dublin"
     print(os.path)
     engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
-    connection = engine.connect()
     while True:
         try:
             now = datetime.datetime.now()
             r = requests.get(STATIONS, params={"apiKey": DubBike_API, "contract" : NAME})
             print(r, now)
-            availability_to_db(r.text)
+            availability_to_db(r.text, engine)
             time.sleep(1*60)
         except:
             print(traceback.format_exc())
