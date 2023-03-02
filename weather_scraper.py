@@ -25,54 +25,37 @@ PASSWORD="Tullamore1!"
 engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
 connection = engine.connect()
 
-NAME="Dublin, IE"
-Weather="https://api.openweathermap.org/data/2.5/weather?"
-Weather_API = "f570baffe356fb97f527d1ba2c0f72d6"
-r = requests.get(Weather, params={"contract" : NAME, "apiKey": Weather_API})
 
-# base URL
-BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
-CITY = "Dublin, IE"
-API_KEY = "f570baffe356fb97f527d1ba2c0f72d6"
-# upadting the URL
-URL = BASE_URL + "q=" + CITY + "&appid=" + API_KEY
-# HTTP request
-response = requests.get(URL)
-data = response.json()
-
-def weather_to_db(text):
+def weather_to_db(weather):
     #tz = pytz.timezone('Europe/Dublin')
     #now = datetime.datetime.now(tz=tz)
     engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
     connection = engine.connect()
     now = datetime.now()
-    vals = (now,text["weather"][0]["description"], text["main"]["temp"-273], text["visibility"], text["wind"]["speed"], text["wind"]["deg"], text["main"]["pressure"], text["main"]["humidity"])
+    vals = (now,weather["weather"][0]["description"], float((weather["main"]["temp"])-273.15), int(weather["visibility"]), int(weather["wind"]["speed"]), int(weather["wind"]["deg"]), int(weather["main"]["pressure"]), int(weather["main"]["humidity"]))
     engine.execute("INSERT INTO `dublin_bikes`.`weather_current` values(%s,%s,%s,%s,%s,%s,%s,%s)", vals)
-    return 
                              
 def main():
     print(os.path)
-    try:
-        while True:
+    while True:
+        try:
+            # base URL
+            BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
+            CITY = "Dublin, IE"
+            API_KEY = "f570baffe356fb97f527d1ba2c0f72d6"
+            # upadting the URL
+            URL = BASE_URL + "q=" + CITY + "&appid=" + API_KEY
+            # HTTP request
+            response = requests.get(URL)
             now = datetime.now()
-            r = requests.get(Weather, params={"contract" : NAME, "apiKey": Weather_API})
+            r = requests.get(BASE_URL, params={"contract" : CITY, "apiKey": API_KEY})
+            weather = response.json()
             print(r, now)
             #write_to_file(r.text)
-            weather_to_db(r.text)
+            weather_to_db(weather)
             time.sleep(1*60)
-    except KeyboardInterrupt:
-        print('Interrupted')
-        #if engine is None:
-            #pass
-    return
-
+        except:
+            print(traceback.format_exc())
 
 if __name__ == '__main__':
-    try:
-        main()
-    except KeyboardInterrupt:
-        print('Interrupted')
-        try:
-            sys.exit(130)
-        except SystemExit:
-            os._exit(130)
+    main()
