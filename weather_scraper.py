@@ -55,7 +55,7 @@ def main():
             print(r, now)
             #write_to_file(r.text)
             weather_to_db(weather)
-            time.sleep(1*60)
+            time.sleep(5*60)
         except:
             print(traceback.format_exc())
 
