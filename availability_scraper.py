@@ -17,8 +17,6 @@ import os
 
 #Connect to database
 
-
-
 def availability_to_db(text, engine):
     stations = json.loads(text)
     connection = engine.connect()
