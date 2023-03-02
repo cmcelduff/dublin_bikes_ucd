@@ -12,7 +12,6 @@ import time
 import os
 from connection import *
 
-
 URI="dbbikes.cjk4ybuxtkwv.us-east-1.rds.amazonaws.com"
 PORT="3306"
 DB="dbbikes"
@@ -21,8 +20,6 @@ PASSWORD="Tullamore1!"
 STATIONS="https://api.jcdecaux.com/vls/v1/stations"
 DubBike_API = "7f06972a5ed335cf697379627fd13027274927c7"
 NAME="Dublin"
-
-
 
 app = Flask(__name__)
 

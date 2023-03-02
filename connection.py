@@ -7,7 +7,7 @@ def getConnection():
     sql_hostname = 'dbbikes.cjk4ybuxtkwv.us-east-1.rds.amazonaws.com'
     sql_username = 'cmcelduff'
     sql_password = 'Tullamore1!'
-    sql_main_database = 'dbbikes'
+    sql_main_database = 'dublin_bikes'
     sql_port = 3306
     connection = pymysql.connect(host=sql_hostname,
                                  user=sql_username,

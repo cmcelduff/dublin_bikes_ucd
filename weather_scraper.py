@@ -46,7 +46,7 @@ def weather_to_db(text):
     engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
     connection = engine.connect()
     now = datetime.now()
-    vals = (now,data["weather"][0]["description"], data["main"]["temp"], data["visibility"], data["wind"]["speed"], data["wind"]["deg"], data["main"]["pressure"], data["main"]["humidity"])
+    vals = (now,text["weather"][0]["description"], text["main"]["temp"-273], text["visibility"], text["wind"]["speed"], text["wind"]["deg"], text["main"]["pressure"], text["main"]["humidity"])
     engine.execute("INSERT INTO `dublin_bikes`.`weather_current` values(%s,%s,%s,%s,%s,%s,%s,%s)", vals)
     return 
                              
@@ -59,7 +59,7 @@ def main():
             print(r, now)
             #write_to_file(r.text)
             weather_to_db(r.text)
-            time.sleep(5*60)
+            time.sleep(1*60)
     except KeyboardInterrupt:
         print('Interrupted')
         #if engine is None:
