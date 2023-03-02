@@ -46,8 +46,8 @@ def weather_to_db(text):
     now = datetime.now()
     vals = (now,data["weather"][0]["description"], data["main"]["temp"], data["visibility"], data["wind"]["speed"], data["wind"]["deg"], data["main"]["pressure"], data["main"]["humidity"])
     engine.execute("INSERT INTO `dublin_bikes`.`weather_current` values(%s,%s,%s,%s,%s,%s,%s,%s)", vals)
-
-                                        
+    return 
+                             
 def main():
     print(os.path)
     try:
