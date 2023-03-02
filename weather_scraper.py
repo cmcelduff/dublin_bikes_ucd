@@ -43,6 +43,8 @@ data = response.json()
 def weather_to_db(text):
     #tz = pytz.timezone('Europe/Dublin')
     #now = datetime.datetime.now(tz=tz)
+    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
+    connection = engine.connect()
     now = datetime.now()
     vals = (now,data["weather"][0]["description"], data["main"]["temp"], data["visibility"], data["wind"]["speed"], data["wind"]["deg"], data["main"]["pressure"], data["main"]["humidity"])
     engine.execute("INSERT INTO `dublin_bikes`.`weather_current` values(%s,%s,%s,%s,%s,%s,%s,%s)", vals)
