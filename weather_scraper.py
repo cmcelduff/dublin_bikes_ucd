@@ -32,9 +32,19 @@ def weather_to_db(weather):
     engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
     connection = engine.connect()
     now = datetime.now()
+<<<<<<< HEAD
     vals = (now,weather["weather"][0]["description"], float((weather["main"]["temp"])-273.15), int(weather["visibility"]), int(weather["wind"]["speed"]), int(weather["wind"]["deg"]), int(weather["main"]["pressure"]), int(weather["main"]["humidity"]))
     engine.execute("INSERT INTO `dublin_bikes`.`weather_current` values(%s,%s,%s,%s,%s,%s,%s,%s)", vals)
                              
+=======
+    vals = (now,data["weather"][0]["description"], data["main"]["temp"]-273, data["visibility"], data["wind"]["speed"], data["wind"]["deg"], data["main"]["pressure"], data["main"]["humidity"])
+    engine.execute("INSERT INTO `dublin_bikes`.`weather_current` values(%s,%s,%s,%s,%s,%s,%s,%s)", vals)
+    return 
+
+
+
+                                        
+>>>>>>> 4aad30ccc3332215d01886a54526c60134a20862
 def main():
     print(os.path)
     while True:
