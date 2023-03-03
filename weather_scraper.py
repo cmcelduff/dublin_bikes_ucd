@@ -33,7 +33,7 @@ def weather_to_db(weather):
     connection = engine.connect()
     now = datetime.now()
     vals = (now, weather["weather"][0]["main"], weather["weather"][0]["description"], int((weather["main"]["temp"])-273.15), int(weather["visibility"]), int(weather["wind"]["speed"]), int(weather["wind"]["deg"]), int(weather["main"]["pressure"]), int(weather["main"]["humidity"]))
-    engine.execute("INSERT INTO `dublin_bikes`.`weather_current` values(%s,%s,%s,%s,%s,%s,%s,%s)", vals)
+    engine.execute("INSERT INTO `dublin_bikes`.`weather_current` values(%s,%s,%s,%s,%s,%s,%s,%s,%s)", vals)
 
     return 
 
