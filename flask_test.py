@@ -75,9 +75,9 @@ def weather_forecast():
     connection = engine.connect()  
     print("************************")
 
-    sql = f"""SELECT weather_description, temp, wind_speed, humidity, wind_speed
+    sql = f"""SELECT time, weather_description, temp, wind_speed, humidity
     FROM dublin_bikes.weather_current
-    ORDER BY time 
+    ORDER BY time DESC
     LIMIT 1;"""
 
     df = pd.read_sql(sql, engine)
