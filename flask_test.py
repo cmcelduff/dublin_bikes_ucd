@@ -1,4 +1,4 @@
-from flask import Flask 
+from flask import Flask, render_template
 import sqlalchemy as sqla 
 from sqlalchemy import create_engine 
 import pandas as pd
@@ -24,8 +24,9 @@ NAME="Dublin"
 app = Flask(__name__)
 
 @app.route("/")
-def hello():
-    return "Hello World!"
+def main():
+    GMAP_API = os.environ.get("AIzaSyDb1zt2yFhv6A2dHezuG3hzGh9kva2R4OE")
+    return render_template("mapTrial.html", GMAP_API=GMAP_API)
 
 @app.route("/stations")
 def stations():
