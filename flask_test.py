@@ -77,7 +77,8 @@ def weather_forecast():
 
     sql = f"""SELECT weather_description, temp, wind_speed, humidity, wind_speed
     FROM dublin_bikes.weather_current
-    ORDER BY weather_description;"""
+    ORDER BY time
+    LIMIT 1;"""
 
     df = pd.read_sql(sql, engine)
     df.reset_index(drop=True, inplace=True)
