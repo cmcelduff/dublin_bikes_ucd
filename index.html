@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <title>Simple Map</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="module" src="./index.js"></script>
+    <title>My Google Map</title>
+    <style>
+    #map {
+        height:400px;
+        width:100%;
+        }
+    </style>
+  </head>
+  <body>    
+    <div id="map"></div>
+    <script>
+
+        function initMap() {
+            var options = {
+                zoom:13,
+                center:{lat:53.3498,lng:-6.2603}
+            }
+
+            <!-- New Map -->
+            var map = new 
+            google.maps.Map(document.getElementById('map'), options)
+
+            var marker = new google.maps.Marker({
+                position:{lat: 53.3465, lng:-6.2930},
+                map:map
+            });
+
+            var infoWindow = new google.maps.InfoWindow({
+                content: '<h1>Heuston Station</h1>'
+            });
+
+            addMarker({lat: 53.3494, lng: -6.2606});
+            addMarker({lat: 53.3352, lng: -6.2285});
+
+            marker.addListener('click', function(){
+                infoWindow.open(map,marker);
+                infoWindow.open(map,gpo);
+
+            });
+
+            
+
+            function addMarker(coords){
+                var marker = new google.maps.Marker({
+                    position:coords,
+                    map:map
+                });
+
+                if(props.iconImage){
+                    marker.setIcon(props.iconImage);
+                }
+            }
+        }
+    </script>
+
+    <!-- 
+      The `defer` attribute causes the callback to execute after the full HTML
+      document has been parsed. For non-blocking uses, avoiding race conditions,
+      and consistent behavior across browsers, consider loading using Promises
+      with https://www.npmjs.com/package/@googlemaps/js-api-loader.
+      -->
+    
+
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDb1zt2yFhv6A2dHezuG3hzGh9kva2R4OE&callback=initMap&v=weekly"
+      defer
+    ></script>
+  </body>
+</html>
