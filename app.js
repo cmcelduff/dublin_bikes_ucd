@@ -30,8 +30,7 @@ function initMap() {
                 });
                 currWindow = infowindow;
                 infowindow.open(map, marker);
-                weeklyChart(station.number);
-                hourlyChart(station.number);
+                
             });
         });
     }).catch(err => {
