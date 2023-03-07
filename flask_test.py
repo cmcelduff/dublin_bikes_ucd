@@ -1,4 +1,4 @@
-from flask import Flask 
+from flask import Flask, render_template
 import sqlalchemy as sqla 
 from sqlalchemy import create_engine 
 import pandas as pd
@@ -11,6 +11,7 @@ import datetime
 import time
 import os
 from connection import *
+import mapTrial 
 
 URI="dbbikes.cjk4ybuxtkwv.us-east-1.rds.amazonaws.com"
 PORT="3306"
@@ -24,8 +25,9 @@ NAME="Dublin"
 app = Flask(__name__)
 
 @app.route("/")
-def hello():
-    return "Hello World!"
+def main():
+    GMAP_API = "AIzaSyDb1zt2yFhv6A2dHezuG3hzGh9kva2R4OE"
+    return render_template("mapTrial.html", GMAP_API=GMAP_API)
 
 @app.route("/stations")
 def stations():
@@ -75,9 +77,10 @@ def weather_forecast():
     connection = engine.connect()  
     print("************************")
 
-    sql = f"""SELECT weather_description, temp, wind_speed, humidity, wind_speed
+    sql = f"""SELECT time, weather_description, temp, wind_speed, humidity
     FROM dublin_bikes.weather_current
-    ORDER BY weather_description;"""
+    ORDER BY time DESC
+    LIMIT 1;"""
 
     df = pd.read_sql(sql, engine)
     df.reset_index(drop=True, inplace=True)
