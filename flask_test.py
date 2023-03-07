@@ -11,7 +11,6 @@ import datetime
 import time
 import os
 from connection import *
-import mapTrial 
 
 URI="dbbikes.cjk4ybuxtkwv.us-east-1.rds.amazonaws.com"
 PORT="3306"
@@ -27,7 +26,7 @@ app = Flask(__name__)
 @app.route("/")
 def main():
     GMAP_API = "AIzaSyDb1zt2yFhv6A2dHezuG3hzGh9kva2R4OE"
-    return render_template("mapTrial.html", GMAP_API=GMAP_API)
+    return render_template("mapTrial.html")
 
 @app.route("/stations")
 def stations():
