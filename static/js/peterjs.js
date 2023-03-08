@@ -1,6 +1,9 @@
 
     var map;
 
+    // Compile the Handlebars template for pop-up peter
+    var template = Handlebars.compile("Handlebars <b>{{doesWhat}}</b>");
+
     function addMarkers(stations) {
       for (const station of stations) {
         console.log(station);
@@ -13,6 +16,27 @@
           title: station.name,
           station_number: station.number,
         });
+
+
+
+         // Add a click event listener to the marker
+        marker.addListener("click", function() {
+        // Compile the Handlebars template with a message
+        var message = "Hello from station " + station.name;
+        var compiledTemplate = template({ doesWhat: message });
+  
+        // Create an info window with the compiled template as content
+        var infoWindow = new google.maps.InfoWindow({
+          content: compiledTemplate,
+        });
+  
+        // Open the info window on the clicked marker
+        infoWindow.open(map, marker);
+      });
+
+ 
+
+
       }
     }
 
@@ -42,4 +66,5 @@
     
     var map = null;
     window.initMap = initMap;
-
+    
+    console.log(typeof Handlebars);
