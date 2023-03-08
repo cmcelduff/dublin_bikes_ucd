@@ -10,7 +10,6 @@ import traceback
 import datetime
 import time
 import os
-from connection import *
 
 URI="dbbikes.cjk4ybuxtkwv.us-east-1.rds.amazonaws.com"
 PORT="3306"

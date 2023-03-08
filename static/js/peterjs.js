@@ -1,13 +1,17 @@
 
     var map;
 
-    // Compile the Handlebars template for pop-up peter
-    var template = Handlebars.compile("Handlebars <b>{{doesWhat}}</b>");
 
     function addMarkers(stations) {
       for (const station of stations) {
         console.log(station);
-        var marker = new google.maps.Marker({
+
+        const infowindow = new google.maps.InfoWindow({
+          content: station.name,
+          ariaLabel: station.name,
+        });
+
+        const marker = new google.maps.Marker({
           position: {
             lat: station.position_lat,
             lng: station.position_lng,
@@ -16,25 +20,46 @@
           title: station.name,
           station_number: station.number,
         });
-
-
-          //HANDLEBARS
-         // Add a click event listener to the marker
-        marker.addListener("click", function() {
-        // Compile the Handlebars template with a message
-        var message = "Hello from station " + station.name;
-        var compiledTemplate = template({ doesWhat: message });
-  
-        // Create an info window with the compiled template as content
-        var infoWindow = new google.maps.InfoWindow({
-          content: compiledTemplate,
+        
+        marker.addListener("click", () => {
+          infowindow.open({
+            anchor: marker,
+            map,
+          });
+          
         });
-  
-        // Open the info window on the clicked marker
-        infoWindow.open(map, marker);
-      });
+        console.log(marker.position);
       }
     }
+
+      // function addMarkerInfo() {
+      //   _.forEach(stations, function(station)) {
+      //       // console.log(station.name, station.number);
+      //       var marker = new google.maps.Marker({
+      //         position: {
+      //           lat: station.position_lat,
+      //           lng: station.position_lng,
+      //         },
+      //         map: map,
+      //         title: station.name,
+      //         station_number: station.number,
+      //       });
+
+      //     var contentString = '<div id="content"><h1>' + station.name + '</h1></div>'
+      //       + '<div id="station_availability"></div>';
+
+      //       const infowindow = new google.maps.InfoWindow({
+      //         content: contentString,
+      //         maxWidth: 200
+      //     });
+
+      //     marker.addListener('click', function () {
+      //         closeOtherInfo();
+      //         infowindow.open(marker.get('map'), marker);
+      //         InforObj[0] = infowindow;
+      //     });
+      //     }
+      //   }
 
     function getStations() {
       fetch("/stations")
@@ -63,4 +88,4 @@
     var map = null;
     window.initMap = initMap;
     
-    
+  
