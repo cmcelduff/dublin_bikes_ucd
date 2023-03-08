@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <title>My Google Map</title>
@@ -21,10 +21,16 @@ the div
       padding: 0;
     }
   </style>
+
+<script src="{{ url_for('static', filename='/js/peterjs.js') }}"></script>
+
+
 </head>
 
 <body>
   <div id="map"></div>
+
+  <!--
   <script>
     var map;
 
@@ -70,6 +76,9 @@ the div
     var map = null;
     window.initMap = initMap;
   </script>
+
+-->
+
   <script src="https://maps.googleapis.com/maps/api/js?
 key=AIzaSyDb1zt2yFhv6A2dHezuG3hzGh9kva2R4OE&callback=initMap" async defer></script>
 </body>

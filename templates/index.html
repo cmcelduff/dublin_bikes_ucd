@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <<title>My Google Map</title>
+    <title>My Google Map</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
+
+    <script src="{{ url_for('static', filename='/js/peterjs.js') }}"></script>
+
 </head>
 <body>
 
@@ -60,7 +63,7 @@
           getStations();
         }
         
-        var map = null;
+        //var map = null;
         window.initMap = initMap;
       </script>
 

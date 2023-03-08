@@ -18,7 +18,7 @@
         });
 
 
-
+          //HANDLEBARS
          // Add a click event listener to the marker
         marker.addListener("click", function() {
         // Compile the Handlebars template with a message
@@ -33,10 +33,6 @@
         // Open the info window on the clicked marker
         infoWindow.open(map, marker);
       });
-
- 
-
-
       }
     }
 
@@ -67,4 +63,4 @@
     var map = null;
     window.initMap = initMap;
     
-    console.log(typeof Handlebars);
+    
