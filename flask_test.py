@@ -25,7 +25,7 @@ app = Flask(__name__)
 @app.route("/")
 def main():
     GMAP_API = "AIzaSyDb1zt2yFhv6A2dHezuG3hzGh9kva2R4OE"
-    return render_template("mapTrial.html")
+    return render_template("index-peter.html")
 
 @app.route("/stations")
 def stations():
