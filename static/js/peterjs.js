@@ -62,5 +62,10 @@
     
     var map = null;
     window.initMap = initMap;
+
+
+
+
+    var template = Handlebars.compile("Handlebars <b>{{doesWhat}}</b>");
     
     
