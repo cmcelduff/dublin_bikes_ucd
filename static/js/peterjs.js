@@ -91,6 +91,6 @@
 
 
 
-    var template = Handlebars.compile("Handlebars <b>{{doesWhat}}</b>");
+    // var template = Handlebars.compile("Handlebars <b>{{doesWhat}}</b>");
     
   
