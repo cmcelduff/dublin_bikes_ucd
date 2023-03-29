@@ -51,6 +51,19 @@ def stations():
 
     return df.to_json(orient="records")
 
+@app.route("/static_stations")
+def static_stations():
+    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
+    connection = engine.connect()
+        
+
+    sql = "SELECT * FROM dublin_bikes.station " \
+          "ORDER BY name;"
+
+    df = pd.read_sql(sql, engine)
+
+    return df.to_json(orient="records")
+
 @app.route('/occupancy/<int:station_id>')
 def get_occupancy(station_id):
     engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
@@ -83,7 +96,25 @@ def weather_forecast():
     df = pd.read_sql(sql, engine)
     df.reset_index(drop=True, inplace=True)
 
-    return df.to_json()
+    return df.to_json(orient="records")
+
+@app.route('/hourly/<int:station_id>')
+def get_hourly_data(station_id):
+    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True)
+    connection = engine.connect()
+
+    sql = f"""SELECT s.name,count(a.number),avg(available_bike_stands) as Avg_bike_stands,
+        avg(available_bikes) as Avg_bikes_free,EXTRACT(HOUR FROM last_update) as Hourly
+        FROM dublin_bikes.availability as a
+        JOIN dublin_bikes.station as s
+        ON s.number = a.number
+        WHERE a.number = {station_id}
+        GROUP BY EXTRACT(HOUR FROM last_update) 
+        ORDER BY EXTRACT(HOUR FROM last_update) asc"""
+
+    df = pd.read_sql(sql, engine)
+
+    return df.to_json(orient="records")
 
 if __name__ == "__main__":
     app.run(debug=True)
