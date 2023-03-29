@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>My Google Map</title>
-    <meta name="viewport" content="initial-scale=1.0">
-    <meta charset="utf-8">
-
-    <script src="{{ url_for('static', filename='/js/peterjs.js') }}"></script>
-
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask app</title>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body>
 
@@ -21,51 +24,25 @@
     </div>
 
     <div id="map"></div>
+
+    <!--Line charts-->
+    <div id="analysis_title"></div>
+    <div id="analysis_area">
+            <div id="weekly_chart"></div>
+            <td><div id="hour_chart"></div>
+    </div>
+
+    <h2>PREDICT FUTURE BIKE AVAILABILITY</h2>
+    <div id="prediction_area"></div>
+
     <script>
-        var map;
-    
-        function addMarkers(stations) {
-          for (const station of stations) {
-            console.log(station);
-            var marker = new google.maps.Marker({
-              position: {
-                lat: station.position_lat,
-                lng: station.position_lng,
-              },
-              map: map,
-              title: station.name,
-              station_number: station.number,
-            });
-          }
-        }
-    
-        function getStations() {
-          fetch("/stations")
-            .then((response) => response.json())
-            .then((data) => {
-              console.log("fetch response", typeof data);
-              addMarkers(data);
-            });
-        }
-    
-        // Initialize and add the map
-        function initMap() {
-          const dublin = { lat: 53.35014, lng: -6.266155 };
-          // The map, centered at Dublin
-          map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 14,
-            center: dublin,
-          });
-          // const marker = new google.maps.Marker({
-          // position: dublin,
-          // map: map,
-          // });
-          getStations();
-        }
-        
-        //var map = null;
-        window.initMap = initMap;
-      </script>
+        stationDropDown();
+        //predictionDropDown();
+        displayWeather();
+
+        google.charts.load('current', {'packages':['corechart']});
+
+    </script>
 
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
   </script>

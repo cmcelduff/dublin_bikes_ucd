@@ -25,7 +25,7 @@ app = Flask(__name__)
 @app.route("/")
 def main():
     GMAP_API = "AIzaSyDb1zt2yFhv6A2dHezuG3hzGh9kva2R4OE"
-    return render_template("index-peter.html")
+    return render_template("index.html")
 
 @app.route("/stations")
 def stations():
@@ -118,5 +118,3 @@ def get_hourly_data(station_id):
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-#p

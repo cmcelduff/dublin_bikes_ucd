@@ -190,6 +190,17 @@ function hourlyChart(station_number) {
     });
 }
 
+function capitalise(str) {
+    let result = str[0].toUpperCase();
+    for (let i = 1; i < str.length; i++) {
+        if (str[i - 1] === ' ') {
+            result += str[i].toUpperCase();
+        } else {
+            result += str[i];
+        }
+    }
+    return result;
+}
 
 // Function to display weather forecast
 function displayWeather() {
@@ -207,7 +218,7 @@ function displayWeather() {
 
         var weather_output = "<ul>" + "<li><b>Current Temperature: </b>" + data[0].temp + "°C</li>"
             + "<li><b>Wind Speed: </b>" + data[0].wind_speed + "</li>"
-            + "<li><b>Chances of Rain: </b>" + data[0].rain_1h + "%</li>"
+            + "<li><b>Weather Description: </b>" + capitalise(data[0].weather_description) + "</li>"
             + "<li><b>Humidity: </b>" + data[0].humidity + "%</li></ul>";
 
         document.getElementById("weather").innerHTML = weather_output;
