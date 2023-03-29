@@ -159,7 +159,7 @@ function stationDropDown() {
         return response.json();
     }).then(data => {
 
-        var station_output = "<label for='station_option'>Choose a station: </label>"
+        var station_output = "<label for='station_option'>Choose a nearby station: </label>"
             + "<select name='station_option' id='station_option' onchange='setValue(this)'>"
             + "<option value='' disabled selected> ------------- </option><br>";
 
