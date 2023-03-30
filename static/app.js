@@ -340,4 +340,20 @@ function displayWeather() {
     })
 }
 
+
+//MACHINE LEARNING PULL (PRESENT VALUES HERE NOT PULL)
+//Fetching data for sikit-learn ML
+fetch("/available_bike_stands")
+  .then(response => response.json())
+  .then(data => {
+    const availabilityData = data;
+    // use availabilityData as needed
+    console.log("--------------")
+    console.log(availabilityData)
+  });
+
+
+
+
+
 window.initMap = initMap;
