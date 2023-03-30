@@ -98,6 +98,7 @@ def weather_forecast():
 
     return df.to_json(orient="records")
 
+#app route
 @app.route('/hourly/<int:station_id>')
 def get_hourly_data(station_id):
     engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True)
