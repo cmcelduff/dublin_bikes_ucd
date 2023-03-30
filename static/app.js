@@ -27,7 +27,7 @@ function initMap() {
             
             stations.forEach(station=> {
                 var option = document.createElement("option");
-                option.classList.add("option");
+                option.classList.add("new_option");
                 option.value = station.address + ', Dublin';
                 option.innerHTML = station.address;
                 document.getElementById("end").appendChild(option);
