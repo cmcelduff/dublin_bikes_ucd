@@ -19,13 +19,15 @@ function initMap() {
                 option.value = station.address + ", Dublin";
                 option.innerHTML = station.address;
                 document.getElementById("start").appendChild(option);
-
-                const endOption = document.createElement("option");
-                endOption.classList.add("option");
-                endOption.value = station.address + ", Dublin";
-                endOption.innerHTML = station.address;
-                document.getElementById("end").appendChild(endOption);
-            });
+            })
+            
+            stations.forEach(station=> {
+                var option = document.createElement("option");
+                option.classList.add("option");
+                option.value = station.address + ', Dublin';
+                option.innerHTML = station.address;
+                document.getElementById("end").appendChild(option);
+            })
         }
 
         data.forEach(station => {
