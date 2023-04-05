@@ -1,5 +1,5 @@
 let map;
-var currWindow = false;
+let currWindow = false;
 
 function initMap() {
     const markerArray = [];
@@ -7,49 +7,54 @@ function initMap() {
     fetch("/stations").then(response => {
         return response.json();
     }).then(data => {
-
         map = new google.maps.Map(document.getElementById("map"), {
             center: { lat: 53.349834, lng: -6.260310 },
             zoom: 14,
         });
 
-        //getStations();
-
         function displayDropdown(stations) {
-
-            stations.forEach(station=> {
-                var option = document.createElement("option");
+            stations.forEach(station => {
+                const option = document.createElement("option");
                 option.classList.add("option");
-                option.value = station.address + ', Dublin';
+                option.value = station.address + ", Dublin";
                 option.innerHTML = station.address;
                 document.getElementById("start").appendChild(option);
-            })
-            
-            stations.forEach(station=> {
-                var option = document.createElement("option");
-                option.classList.add("option");
-                option.value = station.address + ', Dublin';
-                option.innerHTML = station.address;
-                document.getElementById("end").appendChild(option);
-            })
+
+                const endOption = document.createElement("option");
+                endOption.classList.add("option");
+                endOption.value = station.address + ", Dublin";
+                endOption.innerHTML = station.address;
+                document.getElementById("end").appendChild(endOption);
+            });
         }
 
         data.forEach(station => {
-
             const marker = new google.maps.Marker({
                 position: { lat: station.position_lat, lng: station.position_lng },
                 map: map,
             });
+
             marker.addListener("click", () => {
                 if (currWindow) {
                     currWindow.close();
                 }
                 const infowindow = new google.maps.InfoWindow({
-                    content: "<h3>" + station.name + "</h3>"
-                        + "<p><b>Available Bikes: </b>" + station.available_bikes + "</p>"
-                        + "<p><b>Available Stands: </b>" + station.available_bike_stands + "</p>"
-                        + "<p><b>Parking Slots: </b>" + station.available_bike_stands + "</p>"
-                        + "<p><b>Status: </b>" + station.status + "</p>"
+                    content:
+                        "<h3>" +
+                        station.name +
+                        "</h3>" +
+                        "<p><b>Available Bikes: </b>" +
+                        station.available_bikes +
+                        "</p>" +
+                        "<p><b>Available Stands: </b>" +
+                        station.available_bike_stands +
+                        "</p>" +
+                        "<p><b>Parking Slots: </b>" +
+                        station.available_bike_stands +
+                        "</p>" +
+                        "<p><b>Status: </b>" +
+                        station.status +
+                        "</p>",
                 });
                 currWindow = infowindow;
                 infowindow.open(map, marker);
@@ -57,36 +62,68 @@ function initMap() {
                 hourlyChart(station.number);
             });
         });
+
         displayDropdown(data);
-    })
-    // Instantiate a directions service.
-    const directionsService = new google.maps.DirectionsService();
-    // Create a renderer for directions and bind it to the map.
-    const directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
-    // Instantiate an info window to hold step text.
-    const stepDisplay = new google.maps.InfoWindow();
 
-    // Display the route between the initial start and end selections.
-    calculateAndDisplayRoute(
-    directionsRenderer,
-    directionsService,
-    markerArray,
-    stepDisplay,
-    map
-    );
-    // Listen to change events from the start and end lists.
-  const onChangeHandler = function () {
-    calculateAndDisplayRoute(
-      directionsRenderer,
-      directionsService,
-      markerArray,
-      stepDisplay,
-      map
-    );
-  };
-  document.getElementById("start").addEventListener("change", onChangeHandler);
-  document.getElementById("end").addEventListener("change", onChangeHandler);
+        // Instantiate a directions service.
+        const directionsService = new google.maps.DirectionsService();
+        // Create a renderer for directions and bind it to the map.
+        const directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
+        // Instantiate an info window to hold step text.
+        const stepDisplay = new google.maps.InfoWindow();
 
+        // Display the route between the initial start and end selections.
+        calculateAndDisplayRoute(
+            directionsRenderer,
+            directionsService,
+            markerArray,
+            stepDisplay,
+            map
+        );
+
+        // Listen to change events from the start and end lists.
+        const onChangeHandler = function () {
+            calculateAndDisplayRoute(
+                directionsRenderer,
+                directionsService,
+                markerArray,
+                stepDisplay,
+                map
+            );
+        };
+        document.getElementById("start").addEventListener("change", onChangeHandler);
+        document.getElementById("end").addEventListener("change", onChangeHandler);
+
+        let longpress;
+        google.maps.event.addListener(map, "mousedown", function (event) {
+            longpress = setTimeout(function () {
+                const marker = new google.maps.Marker({
+                    position: event.latLng,
+                    map: map,
+                    icon: {
+                        url: 'http://maps.google.com/mapfiles/ms/icons/pink-dot.png'
+                    }
+                });
+                console.log("Latitude:", event.latLng.lat());
+                console.log("Longitude:", event.latLng.lng());
+            }, 1000);
+        });
+        
+        google.maps.event.addListener(map, "mouseup", function (event) {
+            clearTimeout(longpress);
+            // Get all markers within 1 km of the dropped marker
+            const nearbyMarkers = markerArray.filter(function (marker) {
+                return google.maps.geometry.spherical.computeDistanceBetween(marker.getPosition(), event.latLng) <= 1000;
+            });
+            // Change the color of nearby markers to pink
+            pinkMarkers = nearbyMarkers.map(function (marker) {
+                marker.setIcon({
+                    url: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+                });
+                return marker;
+            });
+        });
+    });
 }
 
 function calculateAndDisplayRoute(
@@ -120,6 +157,8 @@ function calculateAndDisplayRoute(
     .catch((e) => {
       window.alert("Directions request failed due to " + e);
     });
+
+
 }
 
 function showSteps(directionResult, markerArray, stepDisplay, map) {
@@ -272,6 +311,14 @@ function weeklyChart(station_number) {
         chart = new google.visualization.ColumnChart(document.getElementById("weekly_chart"));
         chart.draw(chart_data, options);
     });
+
+
+    //adding in nearby stations onto chart:
+    
+
+
+
+
 }
 
 
@@ -353,7 +400,32 @@ fetch("/available_bike_stands")
   });
 
 
-
+  function updateMarkerColor() {
+    // get the selected station from the dropdown menu
+    const selectedStation = document.getElementById("station_output").value;
+    
+    // loop over all markers on the map
+    const markers = map.getMarkers();
+    for (let i = 0; i < markers.length; i++) {
+      const marker = markers[i];
+  
+      // calculate the distance between the marker and the selected station
+      const distance = google.maps.geometry.spherical.computeDistanceBetween(
+        marker.getPosition(),
+        new google.maps.LatLng(position_lat, position_lng)
+      );
+  
+      // if the distance is less than 1 km, change the marker color to green
+      if (distance < 1000) {
+        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+      } else {
+        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+      }
+    }
+  }
+  
+  // add the updateMarkerColor function as a listener to the dropdown menu
+  document.getElementById("station_output").addEventListener("change", updateMarkerColor);
 
 
 window.initMap = initMap;
