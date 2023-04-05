@@ -80,7 +80,7 @@ def get_occupancy(station_id):
 
     df = pd.read_sql(sql, engine)
 
-    return df.to_json(orient="records")
+    return df.to_json(orient="records") 
 
 @app.route("/weather_forecast")
 def weather_forecast():
