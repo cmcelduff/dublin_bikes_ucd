@@ -36,7 +36,7 @@ function initMap() {
                 map: map,
             });
 
-            marker.addListener("click", () => {
+            marker.addListener("click", () => { 
                 if (currWindow) {
                     currWindow.close();
                 }
