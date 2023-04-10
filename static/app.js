@@ -148,51 +148,54 @@ function initMap() {
             
 
             // Set the initial value of a_bikes to 0
-            let a_bikes = 0;
+            //let a_bikes = 0;
 
             // Add markers for all stations within 1 km distance (new pins)
             data.forEach(function (station) {
                 if (google.maps.geometry.spherical.computeDistanceBetween(new google.maps.LatLng(station.position_lat, station.position_lng), event.latLng) <= 1000) {
 
-                    // Define the icon object with an orange dot icon
-                    const icon = {
-                        url: "http://maps.google.com/mapfiles/ms/icons/orange-dot.png"
-                    };
+                // Define the icon object with an orange dot icon
+                const icon = {
+                    url: "http://maps.google.com/mapfiles/ms/icons/orange-dot.png"
+                };
 
-                    // Fetch availability data for this station
-                    fetch("/availability3")
-                        .then(response => response.json())
-                        .then(availabilityData => {
-                            // Find the availability data for this station
-                            const availability = availabilityData.find(item => item.number === station.number);
+                // Fetch availability data for this station
+                fetch("/availability3")
+                    .then(response => response.json())
+                    .then(availabilityData => {
+                        console.log("availabilityData");
+                        console.log(availabilityData); // add this line to check the availability data
+                        
+                        console.log(station.available_bikes);
+                        
+                        // Find the availability data for this station
+                        const availability = availabilityData.find(item => item.number === station.number);
+                        console.log(availability);
+                        // Change the pin color based on the available bikes
+                        if (station.available_bikes >= 10) {
+                            icon.url = "http://maps.google.com/mapfiles/ms/icons/green-dot.png";
+                        } else if (station.available_bikes < 10 && station.available_bikes > 1) {
+                            icon.url = "http://maps.google.com/mapfiles/ms/icons/orange-dot.png";
+                        } else {
+                            icon.url = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
+                        }
 
-                            // Change the pin color based on the available bikes
-                            if (availability && availability.available_bikes >= 5) {
-                                icon.url = "http://maps.google.com/mapfiles/ms/icons/green-dot.png";
-                            } else if (availability && availability.available_bikes < 5 && availability.available_bikes > 1) {
-                                icon.url = "http://maps.google.com/mapfiles/ms/icons/orange-dot.png";
-                            } else {
-                                icon.url = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
-                            }
-
-                            const marker = new google.maps.Marker({
-                                position: { lat: station.position_lat, lng: station.position_lng },
-                                a_bikes: station.number,
-                                map: map,
-                                icon: icon
-                            });
-
-                            markerArray.push(marker);
-                            a_bikes += station.available_bike_stands;
-                            console.log(a_bikes);
-                        })
-                        .catch(error => {
-                            console.log("Error fetching availability data", error);
+                        const a_bikes = station.available_bikes; // Move declaration inside the callback
+                        console.log(a_bikes); // Log the value of a_bikes to the console
+                        const marker = new google.maps.Marker({
+                            position: { lat: station.position_lat, lng: station.position_lng },
+                            a_bikes: station.number,
+                            map: map,
+                            icon: icon
                         });
+
+                        markerArray.push(marker);
+                    })
+                    .catch(error => {
+                        console.log("Error fetching availability data", error);
+                    });
                 }
             });
-
-            console.log(a_bikes);
 
 
             
