@@ -1,8 +1,11 @@
 let map;
 let currWindow = false;
 
+
 function initMap() {
     const markerArray = [];
+    const stationMarkers = [];
+    const markerANumbers = []
 
     fetch("/stations").then(response => {
         return response.json();
@@ -36,6 +39,11 @@ function initMap() {
                 map: map,
             });
 
+            //HERE
+            //pushing to station marker array
+            stationMarkers.push(marker);
+            //HERE
+
             marker.addListener("click", () => { 
                 if (currWindow) {
                     currWindow.close();
@@ -62,6 +70,7 @@ function initMap() {
                 infowindow.open(map, marker);
                 weeklyChart(station.number);
                 hourlyChart(station.number);
+            
             });
         });
 
@@ -97,36 +106,176 @@ function initMap() {
         document.getElementById("end").addEventListener("change", onChangeHandler);
 
         let longpress;
+        var icon = {
+            url: 'http://maps.google.com/mapfiles/ms/icons/pink-dot.png',
+            scaledSize: new google.maps.Size(40, 40)
+        };
+
         google.maps.event.addListener(map, "mousedown", function (event) {
+            console.log("mousedown event triggered");
+            console.log(markerArray);
+            console.log("marker array above");
+
             longpress = setTimeout(function () {
                 const marker = new google.maps.Marker({
                     position: event.latLng,
                     map: map,
-                    icon: {
-                        url: 'http://maps.google.com/mapfiles/ms/icons/pink-dot.png'
-                    }
+                    icon: icon
                 });
                 console.log("Latitude:", event.latLng.lat());
                 console.log("Longitude:", event.latLng.lng());
+                markerArray.push(marker); // Push the marker to the array
+                console.log(markerArray);
             }, 1000);
         });
         
         google.maps.event.addListener(map, "mouseup", function (event) {
             clearTimeout(longpress);
-            // Get all markers within 1 km of the dropped marker
-            const nearbyMarkers = markerArray.filter(function (marker) {
-                return google.maps.geometry.spherical.computeDistanceBetween(marker.getPosition(), event.latLng) <= 1000;
+            // Remove all markers that are not within 1 km distance
+            markerArray.forEach(function (marker) {
+                if (google.maps.geometry.spherical.computeDistanceBetween(marker.getPosition(), event.latLng) > 1000) {
+                    marker.setMap(null);
+                }
             });
-            // Change the color of nearby markers to pink
-            pinkMarkers = nearbyMarkers.map(function (marker) {
-                marker.setIcon({
-                    url: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+
+
+            //HERE 2 this removes all origional station locations
+                stationMarkers.forEach(marker => {
+                    marker.setMap(null);
                 });
-                return marker;
+                stationMarkers.length = 0;
+            //HERE 2
+            
+
+            // Set the initial value of a_bikes to 0
+            let a_bikes = 0;
+
+            // Add markers for all stations within 1 km distance (new pins)
+            data.forEach(function (station) {
+                if (google.maps.geometry.spherical.computeDistanceBetween(new google.maps.LatLng(station.position_lat, station.position_lng), event.latLng) <= 1000) {
+
+                    // Define the icon object with an orange dot icon
+                    const icon = {
+                        url: "http://maps.google.com/mapfiles/ms/icons/orange-dot.png"
+                    };
+
+                    // Fetch availability data for this station
+                    fetch("/availability3")
+                        .then(response => response.json())
+                        .then(availabilityData => {
+                            // Find the availability data for this station
+                            const availability = availabilityData.find(item => item.number === station.number);
+
+                            // Change the pin color based on the available bikes
+                            if (availability && availability.available_bikes >= 5) {
+                                icon.url = "http://maps.google.com/mapfiles/ms/icons/green-dot.png";
+                            } else if (availability && availability.available_bikes < 5 && availability.available_bikes > 1) {
+                                icon.url = "http://maps.google.com/mapfiles/ms/icons/orange-dot.png";
+                            } else {
+                                icon.url = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
+                            }
+
+                            const marker = new google.maps.Marker({
+                                position: { lat: station.position_lat, lng: station.position_lng },
+                                a_bikes: station.number,
+                                map: map,
+                                icon: icon
+                            });
+
+                            markerArray.push(marker);
+                            a_bikes += station.available_bike_stands;
+                            console.log(a_bikes);
+                        })
+                        .catch(error => {
+                            console.log("Error fetching availability data", error);
+                        });
+                }
             });
+
+            console.log(a_bikes);
+
+
+            
+            
+            
+
+            /*
+            data.forEach(function (station) {
+                if (google.maps.geometry.spherical.computeDistanceBetween(new google.maps.LatLng(station.position_lat, station.position_lng), event.latLng) <= 1000) {
+                    fetch(`/availability2/${station.number}`).then(response => {
+                        return response.json();
+                    }).then(data => {
+                        const icon = {
+                            url: "",
+                            scaledSize: new google.maps.Size(40, 40)
+                        };
+            
+                        if (data.available_bikes >= 10) {
+                            icon.url = "http://maps.google.com/mapfiles/ms/icons/green-dot.png";
+                        } else if (data.available_bikes < 10 && data.available_bikes > 0) {
+                            icon.url = "http://maps.google.com/mapfiles/ms/icons/orange-dot.png";
+                        } else {
+                            icon.url = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
+                        }
+            
+                        const marker = new google.maps.Marker({
+                            position: { lat: station.position_lat, lng: station.position_lng },
+                            map: map,
+                            icon: icon
+                        });
+            
+                        marker.addListener("click", () => { 
+                            if (currWindow) {
+                                currWindow.close();
+                            }
+                            const infowindow = new google.maps.InfoWindow({
+                                content:
+                                    "<h3>" +
+                                    station.name +
+                                    "</h3>" +
+                                    "<p><b>Available Bikes: </b>" +
+                                    data.available_bikes +
+                                    "</p>" +
+                                    "<p><b>Available Stands: </b>" +
+                                    station.available_bike_stands +
+                                    "</p>" +
+                                    "<p><b>Parking Slots: </b>" +
+                                    station.available_bike_stands +
+                                    "</p>" +
+                                    "<p><b>Status: </b>" +
+                                    station.status +
+                                    "</p>",
+                            });
+                            currWindow = infowindow;
+                            infowindow.open(map, marker);
+                            weeklyChart(station.number);
+                            hourlyChart(station.number);
+                        });
+            
+                        stationMarkers.push(marker);
+                    });
+                }
+            });
+            */
+
+
+
         });
+
+
+
     });
 }
+
+
+
+
+
+
+
+
+
+
 
 function calculateAndDisplayRoute(
     directionsRenderer,
@@ -428,6 +577,20 @@ fetch("/available_bike_stands")
   
   // add the updateMarkerColor function as a listener to the dropdown menu
   document.getElementById("station_output").addEventListener("change", updateMarkerColor);
+
+
+
+  //RESET ALL PIN BUTTON, JUST TESTING IT WORKS HERE WITH CONSOLE LOG 
+  const resetButton = document.getElementById("reset-button");
+  resetButton.addEventListener("click", function() {
+  
+      console.log("BUTTON PRESSED");
+  });
+
+
+
+
+
 
 
 window.initMap = initMap;

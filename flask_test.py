@@ -98,6 +98,26 @@ def weather_forecast():
 
     return df.to_json(orient="records")
 
+
+#pins for bikes
+@app.route("/availability3")
+def availability3():
+    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True)
+    connection = engine.connect()  
+    print("************************")
+
+    sql = f"""SELECT available_bikes
+    FROM dublin_bikes.availability2
+    ORDER BY time DESC
+    LIMIT 1;"""
+
+    df = pd.read_sql(sql, engine)
+    df.reset_index(drop=True, inplace=True)
+
+    return df.to_json(orient="records")
+
+
+
 #app route
 @app.route('/hourly/<int:station_id>')
 def get_hourly_data(station_id):
