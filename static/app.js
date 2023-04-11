@@ -1,11 +1,95 @@
 let map;
 let currWindow = false;
+const markerArray = [];
+const stationMarkers = [];
+const markerANumbers = [];
 
+function init() {
+    const endButton = document.getElementById('end-btn');
+    endButton.addEventListener('click', function() {
+      console.log("World!");
+    }
+)}
+
+
+function init() {
+    const resetButton = document.getElementById('reset-button');
+    resetButton.addEventListener('click', function() {
+      console.log("Hello, World!");
+
+
+       // Remove all markers from the map
+        markerArray.forEach(function (marker) {
+            marker.setMap(null);
+        });
+
+        // Clear the markerArray
+        markerArray.length = 0;
+
+        // Remove all station markers from the map
+        stationMarkers.forEach(function (marker) {
+            marker.setMap(null);
+        });
+
+        // Clear the stationMarkers array
+        stationMarkers.length = 0;
+
+        // Reload the initial markers
+        fetch("/stations")
+            .then(response => {
+            return response.json();
+            })
+            .then(data => {
+            data.forEach(station => {
+                const marker = new google.maps.Marker({
+                position: { lat: station.position_lat, lng: station.position_lng },
+                map: map,
+                });
+
+                // Push the marker to the stationMarkers array
+                stationMarkers.push(marker);
+
+                marker.addListener("click", () => {
+                if (currWindow) {
+                    currWindow.close();
+                }
+                const infowindow = new google.maps.InfoWindow({
+                    content:
+                    "<h3>" +
+                    station.name +
+                    "</h3>" +
+                    "<p><b>Available Bikes: </b>" +
+                    station.available_bikes +
+                    "</p>" +
+                    "<p><b>Available Stands: </b>" +
+                    station.available_bike_stands +
+                    "</p>" +
+                    "<p><b>Parking Slots: </b>" +
+                    station.available_bike_stands +
+                    "</p>" +
+                    "<p><b>Status: </b>" +
+                    station.status +
+                    "</p>",
+                });
+                currWindow = infowindow;
+                infowindow.open(map, marker);
+                weeklyChart(station.number);
+                hourlyChart(station.number);
+                });
+            });
+        });
+    });
+
+
+  }
+  
+  window.addEventListener('load', init);
 
 function initMap() {
-    const markerArray = [];
-    const stationMarkers = [];
-    const markerANumbers = []
+
+    //marker arrays go here
+    
+    
 
     fetch("/stations").then(response => {
         return response.json();
@@ -139,12 +223,12 @@ function initMap() {
             });
 
 
-            //HERE 2 this removes all origional station locations
+            //removes all origional station locations
                 stationMarkers.forEach(marker => {
                     marker.setMap(null);
                 });
                 stationMarkers.length = 0;
-            //HERE 2
+            //end
             
 
             // Set the initial value of a_bikes to 0
@@ -188,6 +272,57 @@ function initMap() {
                     });
             
                     markerArray.push(marker);
+
+
+                    marker.addListener("click", () => { 
+                        if (currWindow) {
+                            currWindow.close();
+                        }
+                        const infowindow = new google.maps.InfoWindow({
+                            content:
+                                "<h3>" +
+                                station.name +
+                                "</h3>" +
+                                "<p><b>Available Bikes: </b>" +
+                                station.available_bikes +
+                                "</p>" +
+                                "<p><b>Available Stands: </b>" +
+                                station.available_bike_stands +
+                                "</p>" +
+                                "<p><b>Parking Slots: </b>" +
+                                station.available_bike_stands +
+                                "</p>" +
+                                "<p><b>Status: </b>" +
+                                station.status +
+                                "</p>" +
+                                "<p><button type='button' id='end-btn'>Set as destination</button></p> <script>init();</script>",
+                        });
+                        currWindow = infowindow;
+                        infowindow.open(map, marker);
+                        weeklyChart(station.number);
+                        hourlyChart(station.number);
+                    
+                    });
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     }
                 });
                 })
@@ -319,6 +454,7 @@ function showSteps(directionResult, markerArray, stepDisplay, map) {
     // when calculating new routes.
     const myRoute = directionResult.routes[0].legs[0];
   
+    //setting values onto marker array in for loop to draw lines from start to end locations
     for (let i = 0; i < myRoute.steps.length; i++) {
       const marker = (markerArray[i] =
         markerArray[i] || new google.maps.Marker());
@@ -522,11 +658,6 @@ function displayWeather() {
 
         console.log(data);
 
-        //    var today = new Date();
-        //    var current_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-        //    var current_time = today.getHours();
-        //    console.log(current_date);
-        //    console.log(current_time);
 
         var weather_output = "<ul>" + "<li><b>Current Temperature: </b>" + data[0].temp + "°C</li>"
             + "<li><b>Wind Speed: </b>" + data[0].wind_speed + "</li>"
@@ -538,18 +669,6 @@ function displayWeather() {
         console.log("Error:", err);
     })
 }
-
-
-//MACHINE LEARNING PULL (PRESENT VALUES HERE NOT PULL)
-//Fetching data for sikit-learn ML
-fetch("/available_bike_stands")
-  .then(response => response.json())
-  .then(data => {
-    const availabilityData = data;
-    // use availabilityData as needed
-    console.log("--------------")
-    console.log(availabilityData)
-  });
 
 
   function updateMarkerColor() {
@@ -581,12 +700,7 @@ fetch("/available_bike_stands")
 
 
 
-  //RESET ALL PIN BUTTON, JUST TESTING IT WORKS HERE WITH CONSOLE LOG 
-  const resetButton = document.getElementById("reset-button");
-  resetButton.addEventListener("click", function() {
-  
-      console.log("BUTTON PRESSED");
-  });
+
 
 
 

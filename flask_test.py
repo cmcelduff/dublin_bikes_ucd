@@ -140,19 +140,4 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 
-#Machine learning from SQL data
-def pulling_sql_data():
-    #set up database connection
-    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True)
-    conn = engine.connect()
-    
-    #Execute SQL query to retrieve current_availability column
-    query = "SELECT current_availability FROM dublin_bikes.availability;"
-    result = conn.execute(query)
-    
-    #Store results in a list
-    data = [row[0] for row in result]
-    
-    #Close database connection
-    conn.close()
-    return data
+
