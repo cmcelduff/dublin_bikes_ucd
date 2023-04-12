@@ -3,13 +3,40 @@ let currWindow = false;
 const markerArray = [];
 const stationMarkers = [];
 const markerANumbers = [];
+let selectedPinStart = 0;
+let selectedPinEnd = 0;
+let selectedPinEndX = 0;
 
-function init() {
-    const endButton = document.getElementById('end-btn');
-    endButton.addEventListener('click', function() {
-      console.log("World!");
-    }
-)}
+
+//globals for repopulating route
+let DR = 0;
+let DS = 0;
+let MR = 0;
+let SD = 0;
+let MP = 0;
+
+
+
+
+function init2(){
+    console.log("WORLD");
+
+}
+
+
+function helloWorld(x,y) {
+    console.log("World!");
+    console.log("Calculate route is being called!");
+    //S is the start location being fed into the function
+    selectedPinStart = ({lat: x , lng: y});
+    console.log("x pos lat + y pos lng");
+    console.log(x);
+    console.log(y);
+    console.log(selectedPinEndX);
+    selectedPinEnd = selectedPinEndX;
+    calculateAndDisplayRoute(DR,DS,MR,SD,MP);
+}
+
 
 
 function init() {
@@ -164,8 +191,17 @@ function initMap() {
         const directionsService = new google.maps.DirectionsService();
         // Create a renderer for directions and bind it to the map.
         const directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
+
+        //set global
+        DR = directionsRenderer;
+        DS = directionsService;
+
+
         // Instantiate an info window to hold step text.
         const stepDisplay = new google.maps.InfoWindow();
+
+        //Set global
+        SD = stepDisplay;
 
         // Display the route between the initial start and end selections.
         calculateAndDisplayRoute(
@@ -208,6 +244,8 @@ function initMap() {
                 });
                 console.log("Latitude:", event.latLng.lat());
                 console.log("Longitude:", event.latLng.lng());
+                selectedPinEndX = ({lat: event.latLng.lat(), lng: event.latLng.lng()});
+
                 markerArray.push(marker); // Push the marker to the array
                 console.log(markerArray);
             }, 1000);
@@ -278,31 +316,45 @@ function initMap() {
                         if (currWindow) {
                             currWindow.close();
                         }
+                      
                         const infowindow = new google.maps.InfoWindow({
                             content:
-                                "<h3>" +
-                                station.name +
-                                "</h3>" +
-                                "<p><b>Available Bikes: </b>" +
-                                station.available_bikes +
-                                "</p>" +
-                                "<p><b>Available Stands: </b>" +
-                                station.available_bike_stands +
-                                "</p>" +
-                                "<p><b>Parking Slots: </b>" +
-                                station.available_bike_stands +
-                                "</p>" +
-                                "<p><b>Status: </b>" +
-                                station.status +
-                                "</p>" +
-                                "<p><button type='button' id='end-btn'>Set as destination</button></p> <script>init();</script>",
+                            "<h3>" +
+                            station.name +
+                            "</h3>" +
+                            "<p><b>Available Bikes: </b>" +
+                            station.available_bikes +
+                            "</p>" +
+                            "<p><b>Available Stands: </b>" +
+                            station.available_bike_stands +
+                            "</p>" +
+                            "<p><b>Parking Slots: </b>" +
+                            station.available_bike_stands +
+                            "</p>" +
+                            "<p><button type='button' id='end-btn'>Set as destination</button></p>",
                         });
+                    
                         currWindow = infowindow;
                         infowindow.open(map, marker);
                         weeklyChart(station.number);
                         hourlyChart(station.number);
                     
+                        infowindow.addListener("domready", () => {
+                            const endButton = document.getElementById("end-btn");
+
+                            //HERE
+                            endButton.addEventListener("click", helloWorld(station.position_lat,station.position_lng));
+                          });
+
+
+
+
                     });
+                    
+                    
+                    
+                    
+                    
 
                     
 
@@ -413,24 +465,34 @@ function initMap() {
 
 
 
+
 function calculateAndDisplayRoute(
     directionsRenderer,
     directionsService,
     markerArray,
     stepDisplay,
-    map
+    map,
   ) {
+
+    //printing HERE
+    console.log("function calculateAndDisplayRoute is being run");
+    console.log(selectedPinStart);
+    console.log(selectedPinEnd);
+
+    
+
     // First, remove any existing markers from the map.
-    for (let i = 0; i < markerArray.length; i++) {
-      markerArray[i].setMap(null);
-    }
+    //for (let i = 0; i < markerArray.length; i++) {
+    //  markerArray[i].setMap(null);
+    //}
   
     // Retrieve the start and end locations and create a DirectionsRequest using
     // WALKING directions.
     directionsService
     .route({
-      origin: document.getElementById("start").value,
-      destination: document.getElementById("end").value,
+      //origin: document.getElementById("start").value,
+      origin: selectedPinStart,
+      destination: selectedPinEnd,
       travelMode: google.maps.TravelMode.WALKING,
     })
     .then((result) => {
