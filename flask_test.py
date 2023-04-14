@@ -80,7 +80,7 @@ def get_occupancy(station_id):
 
     df = pd.read_sql(sql, engine)
 
-    return df.to_json(orient="records")
+    return df.to_json(orient="records") 
 
 @app.route("/weather_forecast")
 def weather_forecast():
@@ -97,6 +97,26 @@ def weather_forecast():
     df.reset_index(drop=True, inplace=True)
 
     return df.to_json(orient="records")
+
+
+#pins for bikes
+@app.route("/availability3")
+def availability3():
+    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True)
+    connection = engine.connect()  
+    print("************************")
+
+    sql = f"""SELECT available_bikes
+    FROM dublin_bikes.availability2
+    ORDER BY time DESC
+    LIMIT 1;"""
+
+    df = pd.read_sql(sql, engine)
+    df.reset_index(drop=True, inplace=True)
+
+    return df.to_json(orient="records")
+
+
 
 #app route
 @app.route('/hourly/<int:station_id>')
@@ -120,19 +140,4 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 
-#Machine learning from SQL data
-def pulling_sql_data():
-    #set up database connection
-    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True)
-    conn = engine.connect()
-    
-    #Execute SQL query to retrieve current_availability column
-    query = "SELECT current_availability FROM dublin_bikes.availability;"
-    result = conn.execute(query)
-    
-    #Store results in a list
-    data = [row[0] for row in result]
-    
-    #Close database connection
-    conn.close()
-    return data
+
