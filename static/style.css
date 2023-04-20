@@ -81,3 +81,18 @@ li {
     display: flex;
     justify-content: space-around;
 }
+
+#reset-button {
+    background-color: grey;
+    color: white;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  #reset-button:hover {
+    background-color: #333;
+  }
+  

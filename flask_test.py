@@ -1,96 +1,109 @@
-from flask import Flask, render_template
+from flask import Flask, jsonify, render_template, request
 import sqlalchemy as sqla 
 from sqlalchemy import create_engine 
 import pandas as pd
+from joblib import dump, load
+import json
+from flask_googlecharts import LineChart
+import numpy as np
+from sqlalchemy.sql import text
 
 from IPython.display import display
 import pymysql
 import requests
 import traceback
-import datetime
+from datetime import datetime
 import time
 import os
 
-URI="dbbikes.cjk4ybuxtkwv.us-east-1.rds.amazonaws.com"
+URI="dbbikes2.cytgvbje9wgu.us-east-1.rds.amazonaws.com"
 PORT="3306"
-DB="dbbikes"
-USER="cmcelduff"
-PASSWORD="Tullamore1!"
+DB="dbbikes2"
+USER="admin"
+PASSWORD="DublinBikes1"
 STATIONS="https://api.jcdecaux.com/vls/v1/stations"
 DubBike_API = "7f06972a5ed335cf697379627fd13027274927c7"
 NAME="Dublin"
 
+engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
+connection = engine.connect() 
+
+
 app = Flask(__name__)
+
 
 @app.route("/")
 def main():
     GMAP_API = "AIzaSyDb1zt2yFhv6A2dHezuG3hzGh9kva2R4OE"
     return render_template("index.html")
 
+
 @app.route("/stations")
 def stations():
-    URI="dbbikes.cjk4ybuxtkwv.us-east-1.rds.amazonaws.com"
+    URI="dbbikes2.cytgvbje9wgu.us-east-1.rds.amazonaws.com"
     PORT="3306"
-    DB="dbbikes"
-    USER="cmcelduff"
-    PASSWORD="Tullamore1!"
+    DB="dbbikes2"
+    USER="admin"
+    PASSWORD="DublinBikes1"
 
     #Connect to database
-    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
-    connection = engine.connect()
     
-    sql = "SELECT s.number, s.name, s.address, s.position_lat, s.position_lng, a.available_bike_stands, a.available_bikes, " \
-          "MAX(a.last_update) AS `current_availability` " \
-          "FROM dublin_bikes.availability as a " \
-          "INNER JOIN dublin_bikes.station as s ON s.number = a.number " \
+    sql = "SELECT s.number, s.address, s.position_lat, s.position_lng, a.available_bike_stands, a.available_bikes, " \
+          "MAX(a.datetime) AS `current_availability` " \
+          "FROM dbbikes2.availability2 as a " \
+          "INNER JOIN dbbikes2.station as s ON s.number = a.number " \
           "GROUP BY s.number " \
-          "ORDER BY s.number;"
+          "ORDER BY s.number;"           
 
     df = pd.read_sql(sql, engine)
     print(df)
 
     return df.to_json(orient="records")
 
+
 @app.route("/static_stations")
-def static_stations():
-    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
-    connection = engine.connect()
-        
+def static_stations():     
 
-    sql = "SELECT * FROM dublin_bikes.station " \
-          "ORDER BY name;"
+    sql = "SELECT * FROM dbbikes2.station " \
+          "ORDER BY address;"
 
     df = pd.read_sql(sql, engine)
 
     return df.to_json(orient="records")
 
-@app.route('/occupancy/<int:station_id>')
-def get_occupancy(station_id):
-    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True) 
-    connection = engine.connect()  
 
-    sql = f"""SELECT s.name, avg(a.available_bike_stands) as Avg_bike_stands,
-        avg(a.available_bikes) as Avg_bikes_free
-        FROM dublin_bikes.availability as a
-        JOIN dublin_bikes.station as s
-        ON s.number = a.number
-        WHERE s.number = {station_id}
-        GROUP BY s.name
-        ORDER BY s.name;"""
+@app.route('/occupancy/<int:number>')
+def get_occupancy(number): 
 
-    df = pd.read_sql(sql, engine)
+    sql = text("""SELECT 
+        s.address, 
+        AVG(a.available_bike_stands) AS Avg_bike_stands,
+        AVG(a.available_bikes) AS Avg_bikes_free,
+        DATE_FORMAT(FROM_UNIXTIME(a.datetime), '%a') AS day_of_week
+    FROM dbbikes2.station s 
+    JOIN dbbikes2.availability2 a 
+        ON s.number = a.number 
+        AND DATE_FORMAT(FROM_UNIXTIME(a.datetime), '%a') IS NOT NULL
+    WHERE s.number = :number
+    GROUP BY s.address, day_of_week
+    ORDER BY s.address, day_of_week;""")
+    
+    df = pd.read_sql(sql, engine, params={'number': number})
 
-    return df.to_json(orient="records")
+    # convert the pandas DataFrame to a JSON object
+    occupancy_data = df.to_dict(orient="records")
+    print(occupancy_data)
+
+    # return a JSON response with the occupancy data
+    return jsonify(occupancy_data)
+
 
 @app.route("/weather_forecast")
 def weather_forecast():
-    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True)
-    connection = engine.connect()  
-    print("************************")
 
-    sql = f"""SELECT time, weather_description, temp, wind_speed, humidity
-    FROM dublin_bikes.weather_current
-    ORDER BY time DESC
+    sql = f"""SELECT *
+    FROM dbbikes2.weather2
+    ORDER BY datetime DESC
     LIMIT 1;"""
 
     df = pd.read_sql(sql, engine)
@@ -98,41 +111,36 @@ def weather_forecast():
 
     return df.to_json(orient="records")
 
-#app route
-@app.route('/hourly/<int:station_id>')
-def get_hourly_data(station_id):
-    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True)
-    connection = engine.connect()
 
-    sql = f"""SELECT s.name,count(a.number),avg(available_bike_stands) as Avg_bike_stands,
-        avg(available_bikes) as Avg_bikes_free,EXTRACT(HOUR FROM last_update) as Hourly
-        FROM dublin_bikes.availability as a
-        JOIN dublin_bikes.station as s
-        ON s.number = a.number
-        WHERE a.number = {station_id}
-        GROUP BY EXTRACT(HOUR FROM last_update) 
-        ORDER BY EXTRACT(HOUR FROM last_update) asc"""
+#pins for bikes
+@app.route("/availability3")
+def availability3():
+
+    sql = f"""SELECT available_bikes
+    FROM dbbikes2.availability2
+    ORDER BY datetime DESC
+    LIMIT 1;"""
 
     df = pd.read_sql(sql, engine)
+    df.reset_index(drop=True, inplace=True)
+
     return df.to_json(orient="records")
+
+    
+
+@app.route('/predict/<int:station_id>/<int:day_of_week>/<int:hour_of_day>', methods=['POST'])
+def predict(station_id, day_of_week, hour_of_day):
+    model = load('new_predictions.joblib')
+    avail_predict = model.predict([[station_id, 5, 2, day_of_week, hour_of_day]])
+
+    predict_dict = {"bikes": int(avail_predict[0])} # convert to integer
+    result = json.dumps(predict_dict)
+
+    print(result)  # Print the result to the console
+
+    return result, 200, {'Content-Type': 'application/json'}
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-#Machine learning from SQL data
-def pulling_sql_data():
-    #set up database connection
-    engine = create_engine("mysql+pymysql://{0}:{1}@{2}:{3}".format(USER, PASSWORD, URI, PORT), echo=True)
-    conn = engine.connect()
-    
-    #Execute SQL query to retrieve current_availability column
-    query = "SELECT current_availability FROM dublin_bikes.availability;"
-    result = conn.execute(query)
-    
-    #Store results in a list
-    data = [row[0] for row in result]
-    
-    #Close database connection
-    conn.close()
-    return data

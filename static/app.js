@@ -35,12 +35,17 @@ function initMap() {
         }
 
         data.forEach(station => {
-
             const marker = new google.maps.Marker({
                 position: { lat: station.position_lat, lng: station.position_lng },
                 map: map,
             });
-            marker.addListener("click", () => {
+
+            //HERE
+            //pushing to station marker array
+            stationMarkers.push(marker);
+            //HERE
+
+            marker.addListener("click", () => { 
                 if (currWindow) {
                     currWindow.close();
                 }
@@ -89,12 +94,14 @@ function initMap() {
 
 }
 
+
+//ROUTE
 function calculateAndDisplayRoute(
     directionsRenderer,
     directionsService,
     markerArray,
     stepDisplay,
-    map
+    map,
   ) {
     // First, remove any existing markers from the map.
     for (let i = 0; i < markerArray.length; i++) {
@@ -105,21 +112,24 @@ function calculateAndDisplayRoute(
     // WALKING directions.
     directionsService
     .route({
-      origin: document.getElementById("start").value,
-      destination: document.getElementById("end").value,
+      //origin: document.getElementById("start").value,
+      origin: selectedPinStart,
+      destination: selectedPinEnd,
       travelMode: google.maps.TravelMode.WALKING,
     })
     .then((result) => {
       // Route the directions and pass the response to a function to create
       // markers for each step.
-      document.getElementById("warnings-panel").innerHTML =
-        "<b>" + result.routes[0].warnings + "</b>";
+      //document.getElementById("warnings-panel").innerHTML =
+      //  "<b>" + result.routes[0].warnings + "</b>";
       directionsRenderer.setDirections(result);
       showSteps(result, markerArray, stepDisplay, map);
     })
     .catch((e) => {
       window.alert("Directions request failed due to " + e);
     });
+
+
 }
 
 function showSteps(directionResult, markerArray, stepDisplay, map) {
@@ -128,30 +138,15 @@ function showSteps(directionResult, markerArray, stepDisplay, map) {
     // when calculating new routes.
     const myRoute = directionResult.routes[0].legs[0];
   
+    //setting values onto marker array in for loop to draw lines from start to end locations
     for (let i = 0; i < myRoute.steps.length; i++) {
       const marker = (markerArray[i] =
         markerArray[i] || new google.maps.Marker());
   
       marker.setMap(map);
       marker.setPosition(myRoute.steps[i].start_location);
-      attachInstructionText(
-        stepDisplay,
-        marker,
-        myRoute.steps[i].instructions,
-        map
-      );
     }
   }
-
-  function attachInstructionText(stepDisplay, marker, text, map) {
-    google.maps.event.addListener(marker, "click", () => {
-      // Open an info window when the marker is clicked on, containing the text
-      // of the step.
-      stepDisplay.setContent(text);
-      stepDisplay.open(map, marker);
-    });
-  }
-
 
 // Function to populate the select dropdown menu for possible dates
 function stationDropDown() {
@@ -174,12 +169,12 @@ function stationDropDown() {
     })
 }
 
+
 // Function to set user choice station and trigger other functions
 function setValue(control) {
     var choice = control.value;
     showSelected(choice);
     weeklyChart(choice);
-    hourlyChart(choice);
 }
 
 // Function to display info window for chosen station
@@ -201,16 +196,12 @@ function showSelected(chosenStation) {
                 });
 
                 const infowindow = new google.maps.InfoWindow({
-                    content: "<h3>" + station.name + "</h3>"
+                    content: "<h3>" + station.address + "</h3>"
                         + "<p><b>Available Bikes: </b>" + station.available_bikes + "</p>"
                         + "<p><b>Available Stands: </b>" + station.available_bike_stands + "</p>"
-                        + "<p><b>Parking Slots: </b>" + station.available_bike_stands + "</p>"
-                        + "<p><b>Status: </b>" + station.status + "</p>"
                 });
                 currWindow = infowindow;
                 infowindow.open(map, marker);
-                weeklyChart(station.number);
-                hourlyChart(station.number);
             }
         });
     }).catch(err => {
@@ -221,87 +212,52 @@ function showSelected(chosenStation) {
 
 // Function to display weekly analysis chart
 function weeklyChart(station_number) {
-    fetch("/occupancy/" + station_number).then(response => {
-        return response.json();
-    }).then(data => {
+  fetch(`/occupancy/${station_number}`)
+    .then(response => response.json())
+    .then(data => {
+      const chart_data = new google.visualization.DataTable();
+      chart_data.addColumn("string", "Week_Day_No");
+      chart_data.addColumn("number", "Average Bikes Available");
+      chart_data.addColumn("number", "Average Bike Stands");
 
-        var chosenStationName;
-        var analysis_title_output = "";
+      const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-        Stn_Name = "";
-        bike_stands = 0;
-        bikes_free = 0;
-        Iter_Count = 0;
-        Day_Name = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-        Day_Name_Abrv = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"];
-        Average = [];
-        for (i = 0; i < Day_Name.length; i++) {
-            data.forEach(obj => {
-                chosenStationName = obj.name;
+      const rows = dayNames.map(dayName => {
+        const matchingData = data.find(obj => obj.day_of_week === dayName);
+        return [dayName, matchingData ? matchingData.Avg_bikes_free : null, matchingData ? matchingData.Avg_bike_stands : null];
+      });
 
-                if (obj.DayName == Day_Name[i]) {
-                    Stn_Name = obj.address;
-                    bike_stands = obj.Avg_bike_stands;
-                    bikes_free = bikes_free + obj.Avg_bikes_free;
-                    Iter_Count = Iter_Count + 1;
-                }
-            })
-            Average.push(bikes_free / Iter_Count);
-            bikes_free = 0;
-            Iter_Count = 0;
+      chart_data.addRows(rows);
+
+      const chosenStationName = data[0].address;
+
+      const options = {
+        title: "Average Availability Per Day",
+        width: "400px",
+        height: "500px",
+        vAxis: {
+          title: "Number of Bikes"
         }
+      };
 
-        chart_data = new google.visualization.DataTable();
-        options = {
-            title: 'Average Availability Per Day',
-            width: '700', height: '450',
-            vAxis: {
-                title: 'Number of Bikes'
-            }
-        };
-        chart_data.addColumn('string', "Week_Day_No");
-        chart_data.addColumn('number', "Average Bikes Available");
+      document.getElementById("analysis_title").innerHTML = `<h6>${chosenStationName}</h>`;
 
-        for (i = 0; i < Day_Name.length; i++) {
-            chart_data.addRow([Day_Name_Abrv[i], Average[i]]);
-        }
+      // Clear the contents of the "weekly_chart" div
+      document.getElementById("weekly_chart").innerHTML = "";
 
-        analysis_title_output = "<h2>" + chosenStationName + "</h2>";
-        document.getElementById("analysis_title").innerHTML = analysis_title_output;
-
-        chart = new google.visualization.ColumnChart(document.getElementById("weekly_chart"));
-        chart.draw(chart_data, options);
+      const chart = new google.visualization.ColumnChart(document.getElementById("weekly_chart"));
+      chart.draw(chart_data, options);
     });
+
+
+    //adding in nearby stations onto chart:
+    
+
+
+
+
 }
 
-
-// Function to display hourly analysis chart
-function hourlyChart(station_number) {
-    fetch("/hourly/" + station_number).then(response => {
-        return response.json();
-    }).then(data => {
-
-        chart_data = new google.visualization.DataTable();
-        options = {
-            title: 'Average Availability Per Hour',
-            width: '700', height: '450',
-            hAxis: {
-                title: 'Hour of the Day (00:00)',
-            },
-            vAxis: {
-                title: 'Number of Bikes'
-            }
-        };
-        chart_data.addColumn('timeofday', "Time of Day");
-        chart_data.addColumn('number', "Average Bikes Available");
-
-        for (i = 0; i < data.length; i++) {
-            chart_data.addRow([[data[i]['Hourly'], 0, 0], data[i]['Avg_bikes_free']]);
-        }
-        chart = new google.visualization.LineChart(document.getElementById('hour_chart'));
-        chart.draw(chart_data, options);
-    });
-}
 
 function capitalise(str) {
     let result = str[0].toUpperCase();

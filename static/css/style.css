@@ -1,0 +1,294 @@
+html,
+body {
+  height: 100%;
+  text-align: center;
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px;
+  color: #2d3338;
+  margin: 0;
+  padding: 0;
+}
+
+form {
+  margin: 0;
+  padding: 0;
+}
+
+div {
+  padding: 5px;
+}
+
+/*page title styles*/
+#heading-banner {
+  display: flex;
+  font-size: 14px;
+  background-color: rgba(198, 229, 255, 0.349);
+  padding: 10px;
+  margin-bottom: 0px;
+  align-items: center;
+}
+
+#heading-banner h2 {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+
+#J-planner {
+  background-color: rgba(198, 229, 255, 0.349);
+}
+
+
+#option-box-row-2 {
+  background-color: rgba(198, 229, 255, 0.349);
+}
+
+
+#future_date {
+  background-color: white;
+  position: relative;
+
+}
+
+#flipped {
+  transform: scaleX(-1);
+}
+
+
+/*dropdown styles*/
+#user_choice {
+  display: flex;
+  width: 60%;
+  margin: auto;
+  justify-content: space-evenly;
+  padding-top: 15px;
+}
+
+select,
+input[type="date"] {
+  background-color: rgba(198, 229, 255, 0.349);
+}
+
+#user_choice label,
+select {
+  font-size: 15px;
+  padding: 4px 8px;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+  margin-left: -5px;
+  margin-top: -5px;
+}
+
+/*chart styles*/
+#analysis_area {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-around;
+}
+
+#weekly_chart {
+  margin-top: -50px;
+}
+
+/*weather styles*/
+ul {
+
+  display: flex;
+  justify-content: space-evenly;
+}
+
+li {
+  list-style-type: none;
+  display: inline;
+}
+
+.header-elements {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 10px; /* Add this line to create space between child elements */
+}
+
+#weather-block {
+  display: inline-block;
+}
+
+#dublin-text {
+  display: inline-block;
+}
+
+.toggle-text {
+  display: inline-block;
+}
+
+.switch {
+  display: inline-block;
+}
+
+.reset-button-wrapper {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+/*prediction area styles*/
+#prediction_area form,
+#prediction_area .input-group,
+#prediction_area .submit-button {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+}
+
+#reset-button {
+  background-color: grey;
+  color: white;
+  border-radius: 10px;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+}
+
+#reset-button:hover {
+  background-color: #333;
+}
+
+#reset-box {
+  background-color: rgba(198, 229, 255, 0.349);
+}
+
+#map-box {
+  display: block;
+  background-color: green;
+  text-align: center;
+  margin-top: 20px;
+  height: 600px;
+  width: 100%;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked+.slider {
+  background-color: #2196F3;
+}
+
+input:checked+.slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+#loading-screen {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+#loading-screen img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+}
+
+input[type='date'],
+input[type='text'] {
+  font-size: 14px;
+  padding: 5px;
+  width: 80px;
+}
+
+#station_option {
+  height: 20px;
+  font-size: 14px;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+#option-box #prediction_area {
+  margin-bottom: 0;
+}
+
+#option-box #prediction_area input {
+  padding: 0;
+  margin-bottom: 5px;
+}
+
+.date-input {
+  margin: 0;
+  padding: 0;
+  height: 15px;
+}
+
+.time-input::-webkit-datetime-edit-fields-wrapper {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+.time-input::-webkit-datetime-edit-text {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+  font-size: 16px;
+  /* adjust the font size as needed */
+  width: 60px;
+  /* adjust the width as needed */
+  height: 20px;
+  /* adjust the height as needed */
+}
+
+.input-group>form {
+  display: inline-block;
+  margin-right: 10px;
+}
