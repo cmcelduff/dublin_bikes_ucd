@@ -1,33 +1,143 @@
 let map;
-var currWindow = false;
+let currWindow = false;
+const markerArray = [];
+const stationMarkers = [];
+const markerANumbers = [];
+let selectedPinStart = 0;
+let selectedPinEnd = 0;
+let selectedPinEndX = 0;
+
+
+//globals for repopulating route
+let DR = 0;
+let DS = 0;
+let MR = 0;
+let SD = 0;
+let MP = 0;
+
+
+
+
+function init2(){
+    console.log("WORLD");
+
+}
+
+
+function helloWorld(x,y) {
+    console.log("World!");
+    console.log("Calculate route is being called!");
+    //S is the start location being fed into the function
+    selectedPinStart = ({lat: x , lng: y});
+    console.log("x pos lat + y pos lng");
+    console.log(x);
+    console.log(y);
+    console.log(selectedPinEndX);
+    selectedPinEnd = selectedPinEndX;
+    calculateAndDisplayRoute(DR,DS,MR,SD,MP);
+}
+
+
+
+function init() {
+    const resetButton = document.getElementById('reset-button');
+    resetButton.addEventListener('click', function() {
+      console.log("Hello, World!");
+
+
+       // Remove all markers from the map
+        markerArray.forEach(function (marker) {
+            marker.setMap(null);
+        });
+
+        // Clear the markerArray
+        markerArray.length = 0;
+
+        // Remove all station markers from the map
+        stationMarkers.forEach(function (marker) {
+            marker.setMap(null);
+        });
+
+        // Clear the stationMarkers array
+        stationMarkers.length = 0;
+
+        // Reload the initial markers
+        fetch("/stations")
+            .then(response => {
+            return response.json();
+            })
+            .then(data => {
+            data.forEach(station => {
+                const marker = new google.maps.Marker({
+                position: { lat: station.position_lat, lng: station.position_lng },
+                map: map,
+                });
+
+                // Push the marker to the stationMarkers array
+                stationMarkers.push(marker);
+
+                marker.addListener("click", () => {
+                if (currWindow) {
+                    currWindow.close();
+                }
+                const infowindow = new google.maps.InfoWindow({
+                    content:
+                    "<h3>" +
+                    station.name +
+                    "</h3>" +
+                    "<p><b>Available Bikes: </b>" +
+                    station.available_bikes +
+                    "</p>" +
+                    "<p><b>Available Stands: </b>" +
+                    station.available_bike_stands +
+                    "</p>" +
+                    "<p><b>Parking Slots: </b>" +
+                    station.available_bike_stands +
+                    "</p>" +
+                    "<p><b>Status: </b>" +
+                    station.status +
+                    "</p>",
+                });
+                currWindow = infowindow;
+                infowindow.open(map, marker);
+                weeklyChart(station.number);
+                hourlyChart(station.number);
+                });
+            });
+        });
+    });
+
+
+  }
+  
+  window.addEventListener('load', init);
 
 function initMap() {
-    const markerArray = [];
+
+    //marker arrays go here
+    
+    
 
     fetch("/stations").then(response => {
         return response.json();
     }).then(data => {
-
         map = new google.maps.Map(document.getElementById("map"), {
             center: { lat: 53.349834, lng: -6.260310 },
             zoom: 14,
         });
 
-        //getStations();
-
         function displayDropdown(stations) {
-
-            stations.forEach(station=> {
-                var option = document.createElement("option");
+            stations.forEach(station => {
+                const option = document.createElement("option");
                 option.classList.add("option");
-                option.value = station.address + ', Dublin';
+                option.value = station.address + ", Dublin";
                 option.innerHTML = station.address;
                 document.getElementById("start").appendChild(option);
             })
             
             stations.forEach(station=> {
                 var option = document.createElement("option");
-                option.classList.add("new_option");
+                option.classList.add("option");
                 option.value = station.address + ', Dublin';
                 option.innerHTML = station.address;
                 document.getElementById("end").appendChild(option);
@@ -50,48 +160,299 @@ function initMap() {
                     currWindow.close();
                 }
                 const infowindow = new google.maps.InfoWindow({
-                    content: "<h3>" + station.name + "</h3>"
-                        + "<p><b>Available Bikes: </b>" + station.available_bikes + "</p>"
-                        + "<p><b>Available Stands: </b>" + station.available_bike_stands + "</p>"
-                        + "<p><b>Parking Slots: </b>" + station.available_bike_stands + "</p>"
-                        + "<p><b>Status: </b>" + station.status + "</p>"
+                    content:
+                        "<h3>" +
+                        station.name +
+                        "</h3>" +
+                        "<p><b>Available Bikes: </b>" +
+                        station.available_bikes +
+                        "</p>" +
+                        "<p><b>Available Stands: </b>" +
+                        station.available_bike_stands +
+                        "</p>" +
+                        "<p><b>Parking Slots: </b>" +
+                        station.available_bike_stands +
+                        "</p>" +
+                        "<p><b>Status: </b>" +
+                        station.status +
+                        "</p>",
                 });
                 currWindow = infowindow;
                 infowindow.open(map, marker);
                 weeklyChart(station.number);
                 hourlyChart(station.number);
+            
             });
         });
+
         displayDropdown(data);
-    })
-    // Instantiate a directions service.
-    const directionsService = new google.maps.DirectionsService();
-    // Create a renderer for directions and bind it to the map.
-    const directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
-    // Instantiate an info window to hold step text.
-    const stepDisplay = new google.maps.InfoWindow();
 
-    // Display the route between the initial start and end selections.
-    calculateAndDisplayRoute(
-    directionsRenderer,
-    directionsService,
-    markerArray,
-    stepDisplay,
-    map
-    );
-    // Listen to change events from the start and end lists.
-  const onChangeHandler = function () {
-    calculateAndDisplayRoute(
-      directionsRenderer,
-      directionsService,
-      markerArray,
-      stepDisplay,
-      map
-    );
-  };
-  document.getElementById("start").addEventListener("change", onChangeHandler);
-  document.getElementById("end").addEventListener("change", onChangeHandler);
+        // Instantiate a directions service.
+        const directionsService = new google.maps.DirectionsService();
+        // Create a renderer for directions and bind it to the map.
+        const directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
 
+        //set global
+        DR = directionsRenderer;
+        DS = directionsService;
+
+
+        // Instantiate an info window to hold step text.
+        const stepDisplay = new google.maps.InfoWindow();
+
+        //Set global
+        SD = stepDisplay;
+
+        // Display the route between the initial start and end selections.
+        calculateAndDisplayRoute(
+            directionsRenderer,
+            directionsService,
+            markerArray,
+            stepDisplay,
+            map
+        );
+
+        // Listen to change events from the start and end lists.
+        const onChangeHandler = function () {
+            calculateAndDisplayRoute(
+                directionsRenderer,
+                directionsService,
+                markerArray,
+                stepDisplay,
+                map
+            );
+        };
+        document.getElementById("start").addEventListener("change", onChangeHandler);
+        document.getElementById("end").addEventListener("change", onChangeHandler);
+
+        let longpress;
+        var icon = {
+            url: 'http://maps.google.com/mapfiles/ms/icons/pink-dot.png',
+            scaledSize: new google.maps.Size(40, 40)
+        };
+
+        google.maps.event.addListener(map, "mousedown", function (event) {
+            console.log("mousedown event triggered");
+            console.log(markerArray);
+            console.log("marker array above");
+
+            longpress = setTimeout(function () {
+                const marker = new google.maps.Marker({
+                    position: event.latLng,
+                    map: map,
+                    icon: icon
+                });
+                console.log("Latitude:", event.latLng.lat());
+                console.log("Longitude:", event.latLng.lng());
+                selectedPinEndX = ({lat: event.latLng.lat(), lng: event.latLng.lng()});
+
+                markerArray.push(marker); // Push the marker to the array
+                console.log(markerArray);
+            }, 1000);
+        });
+        
+        google.maps.event.addListener(map, "mouseup", function (event) {
+            clearTimeout(longpress);
+            // Remove all markers that are not within 1 km distance
+            markerArray.forEach(function (marker) {
+                if (google.maps.geometry.spherical.computeDistanceBetween(marker.getPosition(), event.latLng) > 1000) {
+                    marker.setMap(null);
+                }
+            });
+
+
+            //removes all origional station locations
+                stationMarkers.forEach(marker => {
+                    marker.setMap(null);
+                });
+                stationMarkers.length = 0;
+            //end
+            
+
+            // Set the initial value of a_bikes to 0
+            //let a_bikes = 0;
+
+            // Get the station numbers of all stations within 1 km distance
+            const stationNumbers = data.filter(station =>
+                google.maps.geometry.spherical.computeDistanceBetween(new google.maps.LatLng(station.position_lat, station.position_lng), event.latLng) <= 1000
+            ).map(station => station.number);
+            
+            // Fetch availability data for all stations within 1 km distance
+            fetch(`/availability3?numbers=${stationNumbers.join(',')}`)
+                .then(response => response.json())
+                .then(availabilityData => {
+                console.log("availabilityData");
+                console.log(availabilityData); // add this line to check the availability data
+            
+                // Add markers for all stations within 1 km distance
+                data.forEach(station => {
+                    if (google.maps.geometry.spherical.computeDistanceBetween(new google.maps.LatLng(station.position_lat, station.position_lng), event.latLng) <= 1000) {
+                    // Find the availability data for this station
+                    const availability = availabilityData.find(item => item.number === station.number);
+            
+                    // Define the icon object with a color based on the available bikes
+                    const icon = {
+                        url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+                    };
+                    if (station.available_bikes >= 10) {
+                        icon.url = "http://maps.google.com/mapfiles/ms/icons/green-dot.png";
+                    } else if (station.available_bikes < 10 && station.available_bikes > 1) {
+                        icon.url = "http://maps.google.com/mapfiles/ms/icons/orange-dot.png";
+                    }
+            
+                    const a_bikes = station.available_bikes; // Move declaration inside the callback
+                    console.log(a_bikes); // Log the value of a_bikes to the console
+                    const marker = new google.maps.Marker({
+                        position: { lat: station.position_lat, lng: station.position_lng },
+                        a_bikes: station.number,
+                        map: map,
+                        icon: icon
+                    });
+            
+                    markerArray.push(marker);
+
+
+                    marker.addListener("click", () => { 
+                        if (currWindow) {
+                            currWindow.close();
+                        }
+                      
+                        const infowindow = new google.maps.InfoWindow({
+                            content:
+                            "<h3>" +
+                            station.name +
+                            "</h3>" +
+                            "<p><b>Available Bikes: </b>" +
+                            station.available_bikes +
+                            "</p>" +
+                            "<p><b>Available Stands: </b>" +
+                            station.available_bike_stands +
+                            "</p>" +
+                            "<p><b>Parking Slots: </b>" +
+                            station.available_bike_stands +
+                            "</p>" +
+                            "<p><button type='button' id='end-btn'>Set as destination</button></p>",
+                        });
+                    
+                        currWindow = infowindow;
+                        infowindow.open(map, marker);
+                        weeklyChart(station.number);
+                        hourlyChart(station.number);
+                    
+                        infowindow.addListener("domready", () => {
+                            const endButton = document.getElementById("end-btn");
+
+                            //HERE
+                            endButton.addEventListener("click", helloWorld(station.position_lat,station.position_lng));
+                          });
+
+
+
+
+                    });
+                    
+                    
+                    
+                    
+                    
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    }
+                });
+                })
+                .catch(error => {
+                console.log("Error fetching availability data", error);
+                });
+
+
+            
+            
+            
+
+            /*
+            data.forEach(function (station) {
+                if (google.maps.geometry.spherical.computeDistanceBetween(new google.maps.LatLng(station.position_lat, station.position_lng), event.latLng) <= 1000) {
+                    fetch(`/availability2/${station.number}`).then(response => {
+                        return response.json();
+                    }).then(data => {
+                        const icon = {
+                            url: "",
+                            scaledSize: new google.maps.Size(40, 40)
+                        };
+            
+                        if (data.available_bikes >= 10) {
+                            icon.url = "http://maps.google.com/mapfiles/ms/icons/green-dot.png";
+                        } else if (data.available_bikes < 10 && data.available_bikes > 0) {
+                            icon.url = "http://maps.google.com/mapfiles/ms/icons/orange-dot.png";
+                        } else {
+                            icon.url = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
+                        }
+            
+                        const marker = new google.maps.Marker({
+                            position: { lat: station.position_lat, lng: station.position_lng },
+                            map: map,
+                            icon: icon
+                        });
+            
+                        marker.addListener("click", () => { 
+                            if (currWindow) {
+                                currWindow.close();
+                            }
+                            const infowindow = new google.maps.InfoWindow({
+                                content:
+                                    "<h3>" +
+                                    station.name +
+                                    "</h3>" +
+                                    "<p><b>Available Bikes: </b>" +
+                                    data.available_bikes +
+                                    "</p>" +
+                                    "<p><b>Available Stands: </b>" +
+                                    station.available_bike_stands +
+                                    "</p>" +
+                                    "<p><b>Parking Slots: </b>" +
+                                    station.available_bike_stands +
+                                    "</p>" +
+                                    "<p><b>Status: </b>" +
+                                    station.status +
+                                    "</p>",
+                            });
+                            currWindow = infowindow;
+                            infowindow.open(map, marker);
+                            weeklyChart(station.number);
+                            hourlyChart(station.number);
+                        });
+            
+                        stationMarkers.push(marker);
+                    });
+                }
+            });
+            */
+
+
+
+        });
+
+
+
+    });
 }
 
 
@@ -103,10 +464,18 @@ function calculateAndDisplayRoute(
     stepDisplay,
     map,
   ) {
+
+    //printing HERE
+    console.log("function calculateAndDisplayRoute is being run");
+    console.log(selectedPinStart);
+    console.log(selectedPinEnd);
+
+    
+
     // First, remove any existing markers from the map.
-    for (let i = 0; i < markerArray.length; i++) {
-      markerArray[i].setMap(null);
-    }
+    //for (let i = 0; i < markerArray.length; i++) {
+    //  markerArray[i].setMap(null);
+    //}
   
     // Retrieve the start and end locations and create a DirectionsRequest using
     // WALKING directions.
@@ -259,6 +628,15 @@ function weeklyChart(station_number) {
 }
 
 
+    //adding in nearby stations onto chart:
+    
+
+
+
+
+
+
+
 function capitalise(str) {
     let result = str[0].toUpperCase();
     for (let i = 1; i < str.length; i++) {
@@ -279,11 +657,6 @@ function displayWeather() {
 
         console.log(data);
 
-        //    var today = new Date();
-        //    var current_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-        //    var current_time = today.getHours();
-        //    console.log(current_date);
-        //    console.log(current_time);
 
         var weather_output = "<ul>" + "<li><b>Current Temperature: </b>" + data[0].temp + "°C</li>"
             + "<li><b>Wind Speed: </b>" + data[0].wind_speed + "</li>"
@@ -297,16 +670,38 @@ function displayWeather() {
 }
 
 
-//MACHINE LEARNING PULL (PRESENT VALUES HERE NOT PULL)
-//Fetching data for sikit-learn ML
-fetch("/available_bike_stands")
-  .then(response => response.json())
-  .then(data => {
-    const availabilityData = data;
-    // use availabilityData as needed
-    console.log("--------------")
-    console.log(availabilityData)
-  });
+  function updateMarkerColor() {
+    // get the selected station from the dropdown menu
+    const selectedStation = document.getElementById("station_output").value;
+    
+    // loop over all markers on the map
+    const markers = map.getMarkers();
+    for (let i = 0; i < markers.length; i++) {
+      const marker = markers[i];
+  
+      // calculate the distance between the marker and the selected station
+      const distance = google.maps.geometry.spherical.computeDistanceBetween(
+        marker.getPosition(),
+        new google.maps.LatLng(position_lat, position_lng)
+      );
+  
+      // if the distance is less than 1 km, change the marker color to green
+      if (distance < 1000) {
+        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+      } else {
+        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+      }
+    }
+  }
+  
+  // add the updateMarkerColor function as a listener to the dropdown menu
+  document.getElementById("station_output").addEventListener("change", updateMarkerColor);
+
+
+
+
+
+
 
 
 
