@@ -23,43 +23,137 @@
 </head>
 <body>
 
-    <header id="heading-banner">
-        <h1>Dublin Bikes</h1>
-    </header>
 
-    <div id="weather"></div>
+  
 
     
+  
 
-    <div id="user_choice">
-        <div id="station_selection"></div>
+    <!-- Banner -->
+    <div class="row">
+      <div class="twelve columns">
+          <header id="heading-banner"> 
+              <div class="row">
+                  <div class="seven columns">
+                      <div id="dublin-text">
+                          <h2>Dubl<img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png" alt="Red Dot">n B<img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png" alt="Red Dot">kes</h2>
+                      </div>
+                  </div>
+                  <div class="five columns">
+                    <div class="header-elements">
+                      <div id="weather-block">
+                          <div id="weather"></div>
+                      </div>
+                      <div class="toggle-container">
+                          <span class="toggle-text">Toggle switch and click the map to drop location</span>
+                          <label class="switch">
+                              <input type="checkbox" id="toggle-switch">
+                              <span class="slider"></span>
+                          </label>
+                      </div>
+                      <div class="reset-button-wrapper">
+                          <button type="button" id="reset-button">Reset Map</button>
+                      </div>
+                  </div>
+                  </div>
+              </div>
+          </header>
+      </div>
     </div>
-    <div id="dropdown">
-      <i class="fa-solid fa-map-pin" style="color: #00A4D3;"></i>
-      <select id="start">
-        <option value="" selected>Origin</option>
-      </select>
-      <i class="fa-solid fa-location-dot" style="color: #00A4D3;"></i>
-      <select id="end">
-        <option value="" selected>Destination</option>
-      </select>
-    </div>
-    <div id="warnings-panel"></div>
-
-
-    <button type="button" id="reset-button">Reset</button>
     
+    
+    <div class="row">
+      <div class="eight columns">
+
+          <div class="twelve columns">
+            <div id="map-box">
+              <div id="map"></div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="four columns">
+    
+        <!-- option box -->
+        <div id="option-box">
+          <div class="row">
+            <div id="option-box-row-1">
+              <!-- option box 1 elements -->
+              <div class="row">
+                
+              </div>
+              <div id="J-planner">
+                <h6>Journey Planner</h6>
+                <div class="test" id="prediction_area">
+                  <input type='text' id='future_hour' name='future_hour'>
+                    <p>Results will be displayed here</p>
+                </div>
+                    
+            </div>
+          </div>
+    
+    
+          <div class="row">
+            <div id="option-box-row-2">
+              <!-- option box 1 elements -->
+              <div class="row">
+                <div id="analysis_title"></div>
+                  <div id="analysis_area">
+                          <div id="weekly_chart"></div>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+
+          
 
 
 
 
-    <div id="map"></div>
+          <!-- <div class="row">
+            <div class="twelve columns">
+                  
 
-    <!--Line charts-->
-    <div id="analysis_title"></div>
-    <div id="analysis_area">
-            <div id="weekly_chart"></div>
-            <td><div id="hour_chart"></div>
+                  <p>Toggle switch and click the map to drop locaiton</p>
+                  <label class="switch">
+                    <input type="checkbox" id="toggle-switch">
+                    <span class="slider"></span>
+                  </label>
+                
+            </div>
+          </div> -->
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+
+
+
+    <div class="row">
+      <div class="twelve columns">
+        <div id="analysis_title"></div>
+            <div id="analysis_area">
+                <div id="weekly_chart"></div>
+            </div>
+          </div>
+      </div>
+    </div>
+
+
+
+    <div class="row">
+      <div class="twelve columns">
+        
+      </div>
     </div>
 
 
