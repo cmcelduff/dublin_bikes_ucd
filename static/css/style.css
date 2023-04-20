@@ -9,6 +9,8 @@ body {
   padding: 0;
 }
 
+
+
 form {
   margin: 0;
   padding: 0;
@@ -18,11 +20,16 @@ div {
   padding: 5px;
 }
 
+body {
+  background-color: rgba(198, 229, 255, 0.349);
+}
+
+
 /*page title styles*/
 #heading-banner {
   display: flex;
   font-size: 14px;
-  background-color: rgba(198, 229, 255, 0.349);
+  
   padding: 10px;
   margin-bottom: 0px;
   align-items: center;
@@ -40,13 +47,12 @@ div {
 
 
 #J-planner {
-  background-color: rgba(198, 229, 255, 0.349);
+  background-color: white;
+  margin-right: 25px;
 }
 
 
-#option-box-row-2 {
-  background-color: rgba(198, 229, 255, 0.349);
-}
+
 
 
 #future_date {
@@ -93,10 +99,12 @@ select {
   width: 100%;
   align-items: center;
   justify-content: space-around;
+
 }
 
 #weekly_chart {
   margin-top: -50px;
+  
 }
 
 /*weather styles*/
@@ -128,11 +136,22 @@ li {
 }
 
 .toggle-text {
-  display: inline-block;
+  display: block;
 }
 
 .switch {
   display: inline-block;
+}
+
+.j-elements {
+  margin-bottom: 10px; /* Adjust this value to your desired spacing */
+}
+
+.submit-button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .reset-button-wrapper {
@@ -151,16 +170,16 @@ li {
 }
 
 #reset-button {
-  background-color: grey;
-  color: white;
-  border-radius: 10px;
+  background-color: rgba(72, 218, 181, 0.349);
+  color: black;
   font-size: 18px;
   border: none;
   cursor: pointer;
+  width: 100%;
 }
 
 #reset-button:hover {
-  background-color: #333;
+  background-color: rgba(198, 229, 255, 0.349);
 }
 
 #reset-box {
@@ -171,14 +190,15 @@ li {
   display: block;
   background-color: green;
   text-align: center;
-  margin-top: 20px;
-  height: 600px;
+  height: 720px;
+  margin-left: 25px;
   width: 100%;
+
 }
 
 .switch {
   position: relative;
-  display: inline-block;
+  display: block;
   width: 60px;
   height: 34px;
 }
@@ -291,4 +311,25 @@ input[type='text'] {
 .input-group>form {
   display: inline-block;
   margin-right: 10px;
+}
+
+
+.w_elements{
+  margin-top: 8px;
+}
+
+.j-elements{
+  display: block;
+  padding: 10px;
+}
+
+
+
+#graph_block{
+  background-color: rgba(198, 229, 255, 0.349);
+  margin-left: -10px;
+}
+
+#toggle_box{
+  background-color: white
 }

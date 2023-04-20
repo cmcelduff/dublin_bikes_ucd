@@ -587,7 +587,7 @@ function weeklyChart(station_number) {
         }
       };
 
-      document.getElementById("analysis_title").innerHTML = `<h6>${chosenStationName}</h>`;
+      document.getElementById("analysis_title").innerHTML = `<h5>${chosenStationName}</h5>`;
 
       // Clear the contents of the "weekly_chart" div
       document.getElementById("weekly_chart").innerHTML = "";
@@ -623,45 +623,70 @@ function displayWeather() {
         var km = data[0].visibility / 1000;
         km = km.toFixed(1); // 1613.8 km
         
+        /*
+        var weather_output = "<ul>" + "<li><img src='static/css/temperature.png' width='40' height='40'>" + temp + "°C</li>"
+            + "<li><img src='static/css/wind.png' width='35' height='35'>" + data[0].wind_speed + " m/s</li>"
+            + "<li><li><img src='static/css/info.png' width='35' height='35'>" + capitalise(data[0].description) + "</li>"
+            + "<li><img src='static/css/glasses.png' width='35' height='35'>" + km + " km</li></ul>";
+
+        */
 
         var weather_output = "<ul>" + "<li><img src='static/css/temperature.png' width='40' height='40'>" + temp + "°C</li>"
             + "<li><img src='static/css/wind.png' width='35' height='35'>" + data[0].wind_speed + " m/s</li>"
             + "<li><li><img src='static/css/info.png' width='35' height='35'>" + capitalise(data[0].description) + "</li>"
             + "<li><img src='static/css/glasses.png' width='35' height='35'>" + km + " km</li></ul>";
 
-        document.getElementById("weather").innerHTML = weather_output;
+        
+        var tempature_output = temp;
+        document.getElementById("tempature").innerHTML = tempature_output + "°C";
+
+        var wind_output = data[0].wind_speed;
+        document.getElementById("wind").innerHTML = wind_output + " m/s";
+
+        var info_output = capitalise(data[0].description);
+        document.getElementById("info").innerHTML = info_output;
+
+        var vis_output = km;
+        document.getElementById("vis").innerHTML = vis_output + " km";
+
+        //document.getElementById("weather").innerHTML = weather_output;
+
+
+
+
     }).catch(err => {
         console.log("Error:", err);
     })
 }
 
 
+
   // Prediction Function
-  function prediction(station, date, hour, stationName) {
-      const weekdayIndex = (new Date(date)).getDay();
-      fetch("/predict/" + station + "/" + weekdayIndex + "/" + hour, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-          }
-      }).then(response => {
-          return response.json();
-      }).then(data => {
-          console.log(data);
-          // Display the prediction result on the webpage
-          document.getElementById("prediction_result").innerHTML = "Predicted Bikes for " + stationName + " on " + date + " at " + hour + ":00 is: " + data.bikes;
-      }).catch(err => {
-          console.log("Error:", err);
-      })
-  }
+//   function prediction(station, date, hour, stationName) {
+//       const weekdayIndex = (new Date(date)).getDay();
+//       fetch("/predict/" + station + "/" + weekdayIndex + "/" + hour, {
+//           method: 'POST',
+//           headers: {
+//               'Content-Type': 'application/x-www-form-urlencoded'
+//           }
+//       }).then(response => {
+//           return response.json();
+//       }).then(data => {
+//           console.log(data);
+//           // Display the prediction result on the webpage
+//           document.getElementById("prediction_result").innerHTML = "Predicted Bikes for " + stationName + " on " + date + " at " + hour + ":00 is: " + data.bikes;
+//       }).catch(err => {
+//           console.log("Error:", err);
+//       })
+//   }
+
   
   // Function to populate the select dropdown menu for prediction
   function predictionDropDown() {
     fetch("/static_stations").then(response => {
         return response.json();
     }).then(data => {
-
-        var station_output = "<form><label for='station_option'>Choose a station: </label>"
+        station_output = "<label for='station_option'>Choose a station: </label>"
             + "<select name='station_option' id='station_option' onchange='setPredictionValue(this)'>"
             + "<option value='' disabled selected> ------------- </option><br>";
 
@@ -669,34 +694,58 @@ function displayWeather() {
             station_output += "<option value='" + station.number + "' data-stationName='" + station.address + "'>" + station.address + "</option><br>";
         });
 
-        station_output += "</select></form>";
-
-        station_output += "<div class='input-group'>" +
-            "<form style='display:inline-block'><label for='future_date'>Choose a Date:</label>" +
-            "<input type='date' id='future_date' name='future_date' class='date-input'></form>" +
-            "<form style='display:inline-block'><label for='future_hour'>Choose an Hour:</label>" +
-            "<input type='text' id='future_hour' name='future_hour' class='time-input'></form>" +
-            "</div>";
-
-        station_output += "<div class='submit-button'><form><input type='submit' id='predict_button'></form></div>";
-
-        station_output += "<div id='prediction_result'></div><br>";
+        station_output += "</select>";
 
         document.getElementById("prediction_area").innerHTML = station_output;
 
         // Add event listener to the form to call prediction() function
         var predict_button = document.getElementById("predict_button");
-        predict_button.addEventListener("click", function(event) {
+        predict_button.addEventListener("click", function (event) {
             event.preventDefault();
             var station_option = document.getElementById("station_option");
-            var future_date = document.getElementById("future_date");
-            var future_hour = document.getElementById("future_hour").value.slice(0, 2);
-            var stationName = station_option.options[station_option.selectedIndex].getAttribute("data-stationName");
-            prediction(station_option.value, future_date.value, future_hour, stationName);
+
+            var future_date = document.getElementById("future_date").value;
+            var future_hour = document.getElementById("future_hour").value;
+
+            var datetime = new Date(`${future_date}T${future_hour}:00`);
+
+            const dayOfWeek = datetime.getDay(); // returns 0 for Sunday, 1 for Monday, and so on
+            const hour = datetime.getHours();
+            console.log(dayOfWeek, hour);
+            getPrediction(station_option.value, dayOfWeek, hour);
         });
     }).catch(err => {
         console.log("Error:", err);
     })
+}
+
+function getPrediction(number, dayOfWeek, hour) {
+    console.log("Number:", number);
+    console.log("Day of Week:", dayOfWeek);
+    console.log("Hour:", hour);
+
+    fetch(`/predictions/${number}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Data received:", data);
+
+        if (data && data[dayOfWeek] && data[dayOfWeek][hour] !== undefined) {
+            document.getElementById("prediction_result").innerHTML = "<p> Number of available bikes: " + data[dayOfWeek][hour] + "</p>";
+            var stands = data[8] - data[dayOfWeek][hour];
+            document.getElementById("prediction_result").innerHTML += "<p> Number of available stands:" + stands + "</p>";
+            console.log("Bikes available at the specified time:", data[dayOfWeek][hour]);
+        } else {
+            console.error("Invalid data:", data);
+        }
+    })
+    .catch(error => {
+        console.error("Error fetching data:", error);
+    });
 }
   
   // Function to set user choice station and trigger prediction function
