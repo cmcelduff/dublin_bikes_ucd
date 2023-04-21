@@ -315,7 +315,8 @@ input[type='text'] {
 }
 
 #toggle_box{
-  background-color: white
+  background-color: white;
+  height: 100px;
 }
 
 
