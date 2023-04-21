@@ -141,7 +141,7 @@ li {
 }
 
 .reset-button-wrapper {
-  display: inline-block;
+  display: block;
   margin-left: 10px;
 }
 
@@ -161,7 +161,8 @@ li {
   font-size: 18px;
   border: none;
   cursor: pointer;
-  width: 100%;
+  width: 50%;
+  margin-top: -15px;
 }
 
 #reset-button:hover {
@@ -176,7 +177,7 @@ li {
   display: block;
   background-color: green;
   text-align: center;
-  height: 720px;
+  height: 850px;
   margin-left: 25px;
   width: 100%;
 
@@ -316,3 +317,10 @@ input[type='text'] {
 #toggle_box{
   background-color: white
 }
+
+
+#reset-block{
+  background-color: white;
+  margin-left: 25px;
+}
+

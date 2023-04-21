@@ -122,9 +122,9 @@ function init() {
                 }
                 const infowindow = new google.maps.InfoWindow({
                     content:
-                    "<h3>" +
+                    "<h6><u>" +
                     station.address +
-                    "</h3>" +
+                    "</u></h6>" +
                     "<p><b>Available Bikes: </b>" +
                     station.available_bikes +
                     "</p>" +
@@ -216,9 +216,9 @@ function initMap() {
                 }
                 const infowindow = new google.maps.InfoWindow({
                     content:
-                        "<h3>" +
+                        "<h6><u>" +
                         station.address +
-                        "</h3>" +
+                        "</u></h6>" +
                         "<p><b>Available Bikes: </b>" +
                         station.available_bikes +
                         "</p>" +
@@ -377,9 +377,9 @@ function initMap() {
                         
                             const infowindow = new google.maps.InfoWindow({
                                 content:
-                                "<h3>" +
+                                "<h6><u>" +
                                 station.address +
-                                "</h3>" +
+                                "</h6></u>" +
                                 "<p><b>Available Bikes: </b>" +
                                 station.available_bikes +
                                 "</p>" +
@@ -397,6 +397,8 @@ function initMap() {
                                 const endButton = document.getElementById("end-btn");
                                 endButton.addEventListener("click", () => {
                                 helloWorld(station.position_lat, station.position_lng);
+                                //here
+                                infowindow.close();
                                 });
                             });
 
@@ -543,7 +545,7 @@ function showSelected(chosenStation) {
                 });
 
                 const infowindow = new google.maps.InfoWindow({
-                    content: "<h3>" + station.address + "</h3>"
+                    content: "<h6><u>" + station.address + "</u></h6>"
                         + "<p><b>Available Bikes: </b>" + station.available_bikes + "</p>"
                         + "<p><b>Available Stands: </b>" + station.available_bike_stands + "</p>"
                 });
@@ -587,7 +589,7 @@ function weeklyChart(station_number) {
         }
       };
 
-      document.getElementById("analysis_title").innerHTML = `<h5>${chosenStationName}</h5>`;
+      document.getElementById("analysis_title").innerHTML = `<h6>${chosenStationName}</h6>`;
 
       // Clear the contents of the "weekly_chart" div
       document.getElementById("weekly_chart").innerHTML = "";
