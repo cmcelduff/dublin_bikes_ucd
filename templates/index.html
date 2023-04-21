@@ -7,109 +7,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flask app</title>
   <!--<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">-->
-
-
-
   <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-
-
   <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
   <!--Load the AJAX API-->
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-
 </head>
 
 <body>
-
-
   <div class="row">
-
     <div id="big-wrap">
-
       <div class="eight columns">
         <div id="heading-banner">
           <h2>Dubl<img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png" alt="Red Dot">n B<img
               src="http://maps.google.com/mapfiles/ms/icons/red-dot.png" alt="Red Dot">kes</h2>
         </div>
       </div>
-
-
       <div class="one columns">
         <div class="w_elements">
           <img src='static/css/temperature.png' width='30' height='30'>
           <div id="tempature"></div>
         </div>
       </div>
-
       <div class="one columns">
         <div class="w_elements">
           <img src='static/css/wind.png' width='25' height='25'>
           <div id="wind"></div>
         </div>
       </div>
-
       <div class="one columns">
         <div class="w_elements">
           <img src='static/css/info.png' width='25' height='25'>
           <div id="info"></div>
         </div>
       </div>
-
       <div class="one columns">
         <div class="w_elements">
           <img src='static/css/glasses.png' width='25' height='25'>
           <div id="vis"></div>
         </div>
       </div>
-
-
-
     </div>
-
-
-
-
   </div>
-
-
   <div class="row">
-
     <div class="eight columns">
       <div id="map-box">
         <div id="map"></div>
       </div>
     </div>
-
-
     <div class="four columns">
-
-
-
-
       <div id="J-planner">
         <h5>Journey Planner</h5>
         <div id="prediction_area">
-            <!-- The content will be replaced by the predictionDropDown function -->
+          <!-- The content will be replaced by the predictionDropDown function -->
         </div>
         <div class="j-elements">
-            <label for='future_date'>Choose a Date:</label>
-            <input type='date' id='future_date' name='future_date' class='date-input'>
+          <label for='future_date'>Choose a Date:</label>
+          <input type='date' id='future_date' name='future_date' class='date-input'>
         </div>
         <div class="j-elements">
-            <label for='future_hour'>Choose an Hour:</label>
-            <input type='text' id='future_hour' name='future_hour' class='time-input' placeholder='00:00'>
+          <label for='future_hour'>Choose an Hour:</label>
+          <input type='text' id='future_hour' name='future_hour' class='time-input' placeholder='00:00'>
         </div>
         <div class="j-elements">
-            <div class='submit-button'><input type='submit' id='predict_button'></div>
+          <div class='submit-button'><input type='submit' id='predict_button'></div>
         </div>
         <div id='prediction_result'></div>
-    </div>
-
-
+      </div>
       <div class="row">
         <div class="twelve columns">
           <div id="graph_block">
@@ -122,36 +88,17 @@
       </div>
 
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
   </div>
-
-
-
   <div class="row">
     <div class="four columns">
       <button type="button" id="reset-button">Reset Map</button>
     </div>
-
     <div class="four columns">
-
       <div id="toggle_box">
         <div class="row">
           <div class="six columns">
             <span class="toggle-text">Toggle switch and click the map to drop a location</span>
           </div>
-
           <div class="six columns">
             <label class="switch">
               <input type="checkbox" id="toggle-switch">
@@ -161,48 +108,9 @@
 
         </div>
       </div>
-
-
-
-
     </div>
-
-
-
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <div class="row">
     <div class="twelve columns">
       <div id="analysis_title"></div>
@@ -212,46 +120,31 @@
     </div>
   </div>
   </div>
-
-
-
   <div class="row">
     <div class="twelve columns">
-
     </div>
   </div>
-
-
   <div id="main"></div>
-
   <script>
     stationDropDown();
     predictionDropDown();
     displayWeather();
     weeklyChart();
-
     // Add event listener to the form to call prediction() function
     var predict_button = document.getElementById("predict_button");
     predict_button.addEventListener("click", function (event) {
       event.preventDefault();
       var station_option = document.getElementById("station_option");
-
       var future_date = document.getElementById("future_date").value;
       var future_hour = document.getElementById("future_hour").value;
-
       var datetime = new Date(`${future_date}T${future_hour}:00`);
-
       const dayOfWeek = datetime.getDay(); // returns 0 for Sunday, 1 for Monday, and so on
       const hour = datetime.getHours();
       console.log(dayOfWeek, hour);
       getPrediction(station_option.value, dayOfWeek, hour);
     });
-
-
     google.charts.load('current', { 'packages': ['corechart'] });
-
   </script>
-
   <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
   </script>
   <!-- <script src="https://maps.googleapis.com/maps/api/js?

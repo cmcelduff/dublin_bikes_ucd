@@ -7,4 +7,12 @@ dependencies:
   - pandas
   - jupyterlab
   - numpy
+  - pymysql
+  - sqlalchemy
+  - simplejson
+  - mysqlclient
+  - mysql
+  - importlib-metadata
+  - flask
+  - gunicorn
 prefix: /Users/conormcelduff/opt/anaconda3/envs/comp30830

@@ -623,13 +623,6 @@ function displayWeather() {
         var km = data[0].visibility / 1000;
         km = km.toFixed(1); // 1613.8 km
         
-        /*
-        var weather_output = "<ul>" + "<li><img src='static/css/temperature.png' width='40' height='40'>" + temp + "°C</li>"
-            + "<li><img src='static/css/wind.png' width='35' height='35'>" + data[0].wind_speed + " m/s</li>"
-            + "<li><li><img src='static/css/info.png' width='35' height='35'>" + capitalise(data[0].description) + "</li>"
-            + "<li><img src='static/css/glasses.png' width='35' height='35'>" + km + " km</li></ul>";
-
-        */
 
         var weather_output = "<ul>" + "<li><img src='static/css/temperature.png' width='40' height='40'>" + temp + "°C</li>"
             + "<li><img src='static/css/wind.png' width='35' height='35'>" + data[0].wind_speed + " m/s</li>"
@@ -659,26 +652,6 @@ function displayWeather() {
     })
 }
 
-
-
-  // Prediction Function
-//   function prediction(station, date, hour, stationName) {
-//       const weekdayIndex = (new Date(date)).getDay();
-//       fetch("/predict/" + station + "/" + weekdayIndex + "/" + hour, {
-//           method: 'POST',
-//           headers: {
-//               'Content-Type': 'application/x-www-form-urlencoded'
-//           }
-//       }).then(response => {
-//           return response.json();
-//       }).then(data => {
-//           console.log(data);
-//           // Display the prediction result on the webpage
-//           document.getElementById("prediction_result").innerHTML = "Predicted Bikes for " + stationName + " on " + date + " at " + hour + ":00 is: " + data.bikes;
-//       }).catch(err => {
-//           console.log("Error:", err);
-//       })
-//   }
 
   
   // Function to populate the select dropdown menu for prediction

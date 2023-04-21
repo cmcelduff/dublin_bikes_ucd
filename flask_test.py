@@ -206,19 +206,5 @@ def predict(number):
 
 
 
-# @app.route('/predict/<int:station_id>/<int:day_of_week>/<int:hour_of_day>', methods=['POST'])
-# def predict(station_id, day_of_week, hour_of_day):
-#     model = load('new_predictions.joblib')
-#     avail_predict = model.predict([[station_id, 5, 2, day_of_week, hour_of_day]])
-
-#     predict_dict = {"bikes": int(avail_predict[0])} # convert to integer
-#     result = json.dumps(predict_dict)
-
-#     print(result)  # Print the result to the console
-
-#     return result, 200, {'Content-Type': 'application/json'}
-
-
-
 if __name__ == "__main__":
     app.run(debug=True)

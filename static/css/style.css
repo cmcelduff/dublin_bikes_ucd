@@ -9,8 +9,6 @@ body {
   padding: 0;
 }
 
-
-
 form {
   margin: 0;
   padding: 0;
@@ -24,12 +22,10 @@ body {
   background-color: rgba(198, 229, 255, 0.349);
 }
 
-
 /*page title styles*/
 #heading-banner {
   display: flex;
   font-size: 14px;
-  
   padding: 10px;
   margin-bottom: 0px;
   align-items: center;
@@ -45,26 +41,19 @@ body {
   padding-right: 0;
 }
 
-
 #J-planner {
   background-color: white;
   margin-right: 25px;
 }
 
-
-
-
-
 #future_date {
   background-color: white;
   position: relative;
-
 }
 
 #flipped {
   transform: scaleX(-1);
 }
-
 
 /*dropdown styles*/
 #user_choice {
@@ -99,17 +88,14 @@ select {
   width: 100%;
   align-items: center;
   justify-content: space-around;
-
 }
 
 #weekly_chart {
   margin-top: -50px;
-  
 }
 
 /*weather styles*/
 ul {
-
   display: flex;
   justify-content: space-evenly;
 }
@@ -313,7 +299,6 @@ input[type='text'] {
   margin-right: 10px;
 }
 
-
 .w_elements{
   margin-top: 8px;
 }
@@ -322,8 +307,6 @@ input[type='text'] {
   display: block;
   padding: 10px;
 }
-
-
 
 #graph_block{
   background-color: rgba(198, 229, 255, 0.349);
