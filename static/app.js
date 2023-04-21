@@ -563,7 +563,7 @@ function showSelected(chosenStation) {
 function weeklyChart(station_number) {
     //Error handle for null values 
     if (!station_number) {
-        console.warn('weeklyChart function requires a station number');
+        console.warn('weeklyChart function requires a new station number');
         return;
     }
 
