@@ -228,7 +228,11 @@ function initMap() {
                 });
                 currWindow = infowindow;
                 infowindow.open(map, marker);
-                weeklyChart(station.number);
+                if (station.number) {
+                    weeklyChart(station.number);
+                  } else {
+                    console.warn("No station number available. Cannot call weeklyChart function.");
+                  }
             });
         });
 
