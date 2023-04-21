@@ -561,6 +561,11 @@ function showSelected(chosenStation) {
 
 // Function to display weekly analysis chart
 function weeklyChart(station_number) {
+    if (!station_number) {
+        console.warn('weeklyChart function requires a station number');
+        return;
+      }
+      
   fetch(`/occupancy/${station_number}`)
     .then(response => response.json())
     .then(data => {
