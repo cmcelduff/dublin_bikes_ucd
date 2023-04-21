@@ -238,12 +238,12 @@ function initMap() {
 
 
         // Instantiate a directions service.
-        //clicking issue here
+        // Clicking issue here
         const directionsService = new google.maps.DirectionsService();
         // Create a renderer for directions and bind it to the map.
         const directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
 
-        //set global
+        // Set global
         DR = directionsRenderer;
         DS = directionsService;
 
