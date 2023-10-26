@@ -24,5 +24,5 @@ Data for this project is sourced from [JCDecaux](https://developer.jcdecaux.com/
 ## Location-based Search
 
 <p align="center">
-  <img src="UserInput.png" alt="Dublin Bikes" width="700" style="border:2px solid black;">
+  <img src="UserInput.png" alt="Dublin Bikes" width="500" style="border:2px solid black;">
 </p>
