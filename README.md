@@ -38,3 +38,6 @@ Data for this project is sourced from [JCDecaux](https://developer.jcdecaux.com/
   <img src="Predictive2.png" alt="Predictions 2" width="300" style="border:2px solid black;">
 </p>
 
+
+## Languages & Technologies Used 
+![JavaScript](https://img.shields.io/badge/-JavaScript-black?style=flat-square&logo=javascript)
