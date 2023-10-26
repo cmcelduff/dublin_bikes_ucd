@@ -38,12 +38,12 @@ Data for this project is sourced from [JCDecaux](https://developer.jcdecaux.com/
 ## Languages & Technologies Used 
 ![JavaScript](https://img.shields.io/badge/-JavaScript-black?style=flat-square&logo=javascript) <br>
 ![Python](https://img.shields.io/badge/-Python-yellow?style=flat-square&logo=python) <br>
-![HTML5](https://img.shields.io/badge/-HTML5-red?style=flat-square&logo=html5) <br>
+![HTML5](https://img.shields.io/badge/-HTML5-lightred?style=flat-square&logo=html5) <br>
 ![CSS3](https://img.shields.io/badge/-CSS3-blue?style=flat-square&logo=css3) <br>
 ![Scikit Learn](https://img.shields.io/badge/-Scikit_Learn-orange?style=flat-square&logo=scikit-learn) <br>
 ![Jupyter](https://img.shields.io/badge/-Jupyter-lightgray?style=flat-square&logo=jupyter) <br>
 ![MySQL](https://img.shields.io/badge/-MySQL-green?style=flat-square&logo=mysql) <br>
 ![Linux](https://img.shields.io/badge/-Linux-black?style=flat-square&logo=linux) <br>
-![Nginx](https://img.shields.io/badge/-Nginx-white?style=flat-square&logo=nginx) <br>
+![Nginx](https://img.shields.io/badge/-Nginx-brown?style=flat-square&logo=nginx) <br>
 
 
