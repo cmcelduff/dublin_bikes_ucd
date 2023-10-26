@@ -18,6 +18,6 @@ Data for this project is sourced from [JCDecaux](https://developer.jcdecaux.com/
 
 <p align="center">
   <img src="Available1.png" alt="Dublin Bikes 1" width="300" style="border:2px solid black; margin-right:2%;">  <!-- Adjusted width here -->
-  <img src="Available2.png" alt="Dublin Bikes 2" width="45.5%" style="border:2px solid black;">
+  <img src="Available2.png" alt="Dublin Bikes 2" width="45.8%" style="border:2px solid black;">
 </p>
 
