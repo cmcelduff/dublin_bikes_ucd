@@ -43,4 +43,16 @@ Data for this project is sourced from [JCDecaux](https://developer.jcdecaux.com/
 ![JavaScript](https://img.shields.io/badge/-JavaScript-black?style=flat-square&logo=javascript) 
 <br>
 <img src="https://img.shields.io/badge/-JavaScript-black?style=flat-square&logo=javascript" alt="JavaScript" width="150" height="50" />
+<p align="center">
+    <img src="https://img.shields.io/badge/-Python-black?style=flat-square&logo=python" alt="Python" width="150" height="50" />
+    <img src="https://img.shields.io/badge/-JavaScript-black?style=flat-square&logo=javascript" alt="JavaScript" width="150" height="50" />
+    <img src="https://img.shields.io/badge/-HTML5-black?style=flat-square&logo=html5" alt="HTML5" width="150" height="50" />
+    <img src="https://img.shields.io/badge/-CSS3-black?style=flat-square&logo=css3" alt="CSS3" width="150" height="50" />
+    <img src="https://img.shields.io/badge/-Scikit--Learn-black?style=flat-square&logo=scikit-learn" alt="Scikit Learn" width="150" height="50" />
+    <img src="https://img.shields.io/badge/-Jupyter-black?style=flat-square&logo=jupyter" alt="Jupyter" width="150" height="50" />
+    <img src="https://img.shields.io/badge/-MySQL-black?style=flat-square&logo=mysql" alt="MySQL" width="150" height="50" />
+    <img src="https://img.shields.io/badge/-Linux-black?style=flat-square&logo=linux" alt="Linux" width="150" height="50" />
+    <img src="https://img.shields.io/badge/-Nginx-black?style=flat-square&logo=nginx" alt="Nginx" width="150" height="50" />
+</p>
+
 
