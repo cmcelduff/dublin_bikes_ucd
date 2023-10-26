@@ -42,8 +42,8 @@ Data for this project is sourced from [JCDecaux](https://developer.jcdecaux.com/
 ![CSS3](https://img.shields.io/badge/-CSS3-blue?style=flat-square&logo=css3) <br>
 ![Scikit Learn](https://img.shields.io/badge/-Scikit_Learn-orange?style=flat-square&logo=scikit-learn) <br>
 ![Jupyter](https://img.shields.io/badge/-Jupyter-lightgray?style=flat-square&logo=jupyter) <br>
-![MySQL](https://img.shields.io/badge/-MySQL-brown?style=flat-square&logo=mysql) <br>
+![MySQL](https://img.shields.io/badge/-MySQL-green?style=flat-square&logo=mysql) <br>
 ![Linux](https://img.shields.io/badge/-Linux-black?style=flat-square&logo=linux) <br>
-![Nginx](https://img.shields.io/badge/-Nginx-green?style=flat-square&logo=nginx) <br>
+![Nginx](https://img.shields.io/badge/-Nginx-white?style=flat-square&logo=nginx) <br>
 
 
