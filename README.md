@@ -21,3 +21,8 @@ Data for this project is sourced from [JCDecaux](https://developer.jcdecaux.com/
   <img src="Available2.png" alt="Dublin Bikes 2" width="45.9%" style="border:2px solid black;">
 </p>
 
+## Location-based Search
+
+<p align="center">
+  <img src="UserInput.png" alt="Dublin Bikes" width="700" style="border:2px solid black;">
+</p>
