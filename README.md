@@ -31,5 +31,5 @@ Data for this project is sourced from [JCDecaux](https://developer.jcdecaux.com/
 
 <p align="center">
   <img src="Predictive1.png" alt="Predictions 1" width="300" style="border:2px solid black; margin-right:2%;">  <!-- Adjusted width here -->
-  <img src="Predictive2.png" alt="Predictions 2" width="45.9%" style="border:2px solid black;">
+  <img src="Predictive2.png" alt="Predictions 2" width="300" style="border:2px solid black;">
 </p>
