@@ -11,7 +11,7 @@ Data for this project is sourced from [JCDecaux](https://developer.jcdecaux.com/
 ## Project
 
 <p align="center">
-  <img src="DBikes.png" alt="Dublin Bikes" width="600" style="border:2px solid black;">
+  <img src="DBikes.png" alt="Dublin Bikes" width="800" style="border:2px solid black;">
 </p>
 
 ## Availability
