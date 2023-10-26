@@ -40,6 +40,6 @@ Data for this project is sourced from [JCDecaux](https://developer.jcdecaux.com/
 
 
 ## Languages & Technologies Used 
-![JavaScript](https://img.shields.io/badge/-JavaScript-black?style=flat-square&logo=javascript) 
+![JavaScript](https://img.shields.io/badge/-JavaScript-black?style=flat-square&logo=javascript) <br>
 ![Python](https://img.shields.io/badge/-Python-yellow?style=flat-square&logo=python) 
 
