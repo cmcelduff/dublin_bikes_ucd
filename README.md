@@ -4,5 +4,5 @@ A Flask-based journey planner displays all DublinBikes stations in Dublin with r
 
 ## Project
   
-![Game](Image/DBikes.png)  
+![Game](DBikes.png)  
 
